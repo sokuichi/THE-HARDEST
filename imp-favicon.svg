@@ -1,0 +1,27 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64">
+  <defs>
+    <radialGradient id="bg" cx="50%" cy="42%" r="68%">
+      <stop offset="0" stop-color="#2a1518"/>
+      <stop offset="0.58" stop-color="#14110f"/>
+      <stop offset="1" stop-color="#050505"/>
+    </radialGradient>
+    <linearGradient id="horn" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#f3f0e8"/>
+      <stop offset="1" stop-color="#f4bd4b"/>
+    </linearGradient>
+    <linearGradient id="face" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#ff6b7a"/>
+      <stop offset="0.55" stop-color="#9f2733"/>
+      <stop offset="1" stop-color="#351014"/>
+    </linearGradient>
+  </defs>
+  <rect width="64" height="64" rx="14" fill="url(#bg)"/>
+  <path d="M18 19 8 6l4 24Z" fill="url(#horn)" stroke="#11110f" stroke-width="2" stroke-linejoin="round"/>
+  <path d="M46 19 56 6l-4 24Z" fill="url(#horn)" stroke="#11110f" stroke-width="2" stroke-linejoin="round"/>
+  <path d="M10 36c0-15 10-25 22-25s22 10 22 25c0 13-8 22-22 22S10 49 10 36Z" fill="url(#face)" stroke="#f3f0e8" stroke-opacity=".28" stroke-width="2"/>
+  <path d="M18 34c4-4 9-4 12 0-4 4-8 4-12 0Zm16 0c3-4 8-4 12 0-4 4-8 4-12 0Z" fill="#f4bd4b"/>
+  <path d="M22 34h7m7 0h7" stroke="#11110f" stroke-width="2" stroke-linecap="round"/>
+  <path d="M26 45h12l-6 5Z" fill="#f3f0e8"/>
+  <path d="M19 25c4 2 8 2 12 0m2 0c4 2 8 2 12 0" stroke="#11110f" stroke-opacity=".7" stroke-width="3" stroke-linecap="round"/>
+  <path d="M31 38c-2 2-3 3-3 5h8c0-2-1-3-3-5" fill="#351014"/>
+</svg>

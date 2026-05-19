@@ -1,0 +1,1532 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Axiom Rift</title>
+  <style>
+    :root {
+      color-scheme: dark;
+      --bg: #11110f;
+      --ink: #f3f0e8;
+      --muted: #9b988d;
+      --line: rgba(243, 240, 232, 0.18);
+      --line-strong: rgba(243, 240, 232, 0.34);
+      --panel: rgba(22, 22, 19, 0.84);
+      --panel-solid: #181815;
+      --teal: #55d7c7;
+      --rose: #ff6b7a;
+      --green: #95dd64;
+      --gold: #f4bd4b;
+      --violet: #b297ff;
+      --bad: #ff505f;
+      --good: #6ef3aa;
+      --shadow: rgba(0, 0, 0, 0.42);
+      font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    html,
+    body {
+      height: 100%;
+      margin: 0;
+      overflow: hidden;
+      background:
+        radial-gradient(circle at 22% 20%, rgba(85, 215, 199, 0.09), transparent 30%),
+        radial-gradient(circle at 78% 72%, rgba(244, 189, 75, 0.08), transparent 32%),
+        linear-gradient(135deg, #11110f 0%, #191715 48%, #101413 100%);
+      color: var(--ink);
+    }
+
+    button {
+      font: inherit;
+      color: inherit;
+    }
+
+    .app {
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) 320px;
+      height: 100vh;
+      min-height: 640px;
+    }
+
+    .arena {
+      display: grid;
+      grid-template-rows: auto minmax(0, 1fr) auto;
+      min-width: 0;
+      min-height: 0;
+      padding: 18px;
+      gap: 14px;
+    }
+
+    .topbar,
+    .answers,
+    .side {
+      background: var(--panel);
+      border: 1px solid var(--line);
+      box-shadow: 0 18px 46px var(--shadow);
+      backdrop-filter: blur(18px);
+    }
+
+    .topbar {
+      display: grid;
+      grid-template-columns: 1.1fr repeat(5, minmax(86px, auto));
+      align-items: center;
+      gap: 10px;
+      min-height: 76px;
+      padding: 10px;
+      border-radius: 8px;
+    }
+
+    .brand {
+      min-width: 0;
+      padding: 2px 6px;
+    }
+
+    .brand h1 {
+      margin: 0;
+      font-size: clamp(1.15rem, 2.2vw, 1.8rem);
+      line-height: 1;
+      letter-spacing: 0;
+      text-transform: uppercase;
+    }
+
+    .brand .sub {
+      display: flex;
+      gap: 8px;
+      align-items: center;
+      margin-top: 9px;
+      color: var(--muted);
+      font-size: 0.78rem;
+      text-transform: uppercase;
+    }
+
+    .pulse-dot {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background: var(--gold);
+      box-shadow: 0 0 18px var(--gold);
+    }
+
+    .metric {
+      display: grid;
+      gap: 4px;
+      min-width: 82px;
+      padding: 9px 10px;
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      background: rgba(255, 255, 255, 0.035);
+    }
+
+    .metric span {
+      color: var(--muted);
+      font-size: 0.66rem;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+    }
+
+    .metric strong {
+      font-size: 1rem;
+      line-height: 1;
+      white-space: nowrap;
+    }
+
+    .stage-wrap {
+      position: relative;
+      min-height: 0;
+      overflow: hidden;
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      background:
+        linear-gradient(rgba(255, 255, 255, 0.035) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(255, 255, 255, 0.035) 1px, transparent 1px),
+        rgba(10, 10, 9, 0.7);
+      background-size: 34px 34px;
+      box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.025), 0 20px 58px var(--shadow);
+    }
+
+    #stage {
+      display: block;
+      width: 100%;
+      height: 100%;
+      min-height: 360px;
+    }
+
+    .timer {
+      position: absolute;
+      left: 16px;
+      right: 16px;
+      bottom: 16px;
+      height: 8px;
+      overflow: hidden;
+      border-radius: 8px;
+      background: rgba(255, 255, 255, 0.08);
+      border: 1px solid rgba(255, 255, 255, 0.12);
+    }
+
+    .timer div {
+      width: 100%;
+      height: 100%;
+      transform-origin: left center;
+      background: linear-gradient(90deg, var(--green), var(--gold), var(--rose));
+    }
+
+    .veil {
+      position: absolute;
+      inset: 0;
+      display: grid;
+      place-items: center;
+      padding: 28px;
+      background: rgba(17, 17, 15, 0.62);
+      transition: opacity 180ms ease, visibility 180ms ease;
+    }
+
+    .veil[hidden] {
+      display: none;
+      opacity: 0;
+      visibility: hidden;
+      pointer-events: none;
+    }
+
+    .start-panel {
+      width: min(560px, 100%);
+      display: grid;
+      gap: 18px;
+      padding: 26px;
+      border-radius: 8px;
+      border: 1px solid var(--line-strong);
+      background: rgba(20, 20, 18, 0.86);
+      box-shadow: 0 24px 70px var(--shadow);
+    }
+
+    .start-panel h2 {
+      margin: 0;
+      font-size: clamp(1.5rem, 4vw, 3rem);
+      line-height: 0.95;
+      text-transform: uppercase;
+      letter-spacing: 0;
+    }
+
+    .start-panel p {
+      margin: 0;
+      color: var(--muted);
+      line-height: 1.5;
+      max-width: 52ch;
+    }
+
+    .start-actions {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+    }
+
+    .command,
+    .ghost {
+      min-height: 44px;
+      padding: 0 16px;
+      border-radius: 8px;
+      border: 1px solid var(--line-strong);
+      cursor: pointer;
+      transition: transform 120ms ease, border-color 120ms ease, background 120ms ease;
+    }
+
+    .command {
+      background: var(--ink);
+      color: #11110f;
+      font-weight: 800;
+      text-transform: uppercase;
+    }
+
+    .ghost {
+      background: rgba(255, 255, 255, 0.04);
+      color: var(--ink);
+    }
+
+    .command:hover,
+    .ghost:hover,
+    .answer:hover {
+      transform: translateY(-1px);
+      border-color: rgba(243, 240, 232, 0.54);
+    }
+
+    .answers {
+      display: grid;
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+      gap: 10px;
+      min-height: 144px;
+      padding: 10px;
+      border-radius: 8px;
+    }
+
+    .answer {
+      position: relative;
+      display: grid;
+      grid-template-rows: 1fr auto;
+      min-width: 0;
+      min-height: 120px;
+      padding: 8px;
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      background: rgba(255, 255, 255, 0.035);
+      cursor: pointer;
+      transition: transform 120ms ease, border-color 120ms ease, background 120ms ease, opacity 120ms ease;
+    }
+
+    .answer:disabled {
+      cursor: default;
+      opacity: 0.45;
+      transform: none;
+    }
+
+    .answer.correct {
+      border-color: rgba(110, 243, 170, 0.9);
+      background: rgba(110, 243, 170, 0.12);
+    }
+
+    .answer.wrong {
+      border-color: rgba(255, 80, 95, 0.9);
+      background: rgba(255, 80, 95, 0.12);
+    }
+
+    .answer canvas {
+      width: 100%;
+      height: 84px;
+      border-radius: 6px;
+    }
+
+    .answer b {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      min-width: 0;
+      color: var(--muted);
+      font-size: 0.74rem;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+    }
+
+    .answer b span {
+      color: var(--ink);
+      font-size: 0.82rem;
+    }
+
+    .side {
+      display: grid;
+      grid-template-rows: auto minmax(0, 1fr) auto;
+      gap: 14px;
+      min-height: 0;
+      padding: 18px;
+      border-width: 0 0 0 1px;
+      border-radius: 0;
+      background: rgba(18, 18, 16, 0.9);
+    }
+
+    .cue-block {
+      display: grid;
+      gap: 12px;
+      padding-bottom: 14px;
+      border-bottom: 1px solid var(--line);
+    }
+
+    .cue-line {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 10px;
+      color: var(--muted);
+      font-size: 0.7rem;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+    }
+
+    .cue-line strong {
+      color: var(--ink);
+      font-size: 0.8rem;
+      text-align: right;
+    }
+
+    .rule-card {
+      display: grid;
+      grid-template-columns: 74px 1fr;
+      gap: 12px;
+      align-items: center;
+    }
+
+    .rule-orb {
+      width: 74px;
+      aspect-ratio: 1;
+      display: grid;
+      place-items: center;
+      border-radius: 8px;
+      border: 1px solid var(--line-strong);
+      background: rgba(255, 255, 255, 0.035);
+      font-size: 1.45rem;
+      font-weight: 900;
+    }
+
+    .rule-copy {
+      min-width: 0;
+    }
+
+    .rule-copy h2 {
+      margin: 0 0 8px;
+      font-size: 1.4rem;
+      line-height: 1;
+      text-transform: uppercase;
+      letter-spacing: 0;
+    }
+
+    .rule-copy p {
+      min-height: 42px;
+      margin: 0;
+      color: var(--muted);
+      line-height: 1.35;
+      font-size: 0.92rem;
+    }
+
+    .log {
+      display: grid;
+      align-content: start;
+      gap: 8px;
+      min-height: 0;
+      overflow: auto;
+      padding-right: 3px;
+    }
+
+    .log-entry {
+      display: grid;
+      grid-template-columns: 48px 1fr auto;
+      gap: 9px;
+      align-items: center;
+      padding: 8px;
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      background: rgba(255, 255, 255, 0.025);
+      font-size: 0.78rem;
+    }
+
+    .log-entry canvas {
+      width: 48px;
+      height: 36px;
+    }
+
+    .log-entry span {
+      min-width: 0;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+      color: var(--muted);
+    }
+
+    .log-entry strong {
+      color: var(--ink);
+      font-size: 0.72rem;
+    }
+
+    .research {
+      display: grid;
+      gap: 10px;
+      padding-top: 14px;
+      border-top: 1px solid var(--line);
+      color: var(--muted);
+      font-size: 0.78rem;
+      line-height: 1.4;
+    }
+
+    .research strong {
+      color: var(--ink);
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      font-size: 0.68rem;
+    }
+
+    .research a {
+      color: var(--teal);
+      text-decoration: none;
+    }
+
+    .research a:hover {
+      text-decoration: underline;
+    }
+
+    .foot-actions {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 10px;
+    }
+
+    @media (max-width: 980px) {
+      body {
+        overflow: auto;
+      }
+
+      .app {
+        grid-template-columns: 1fr;
+        height: auto;
+        min-height: 100vh;
+      }
+
+      .arena {
+        min-height: 100vh;
+      }
+
+      .side {
+        border-width: 1px 0 0;
+        grid-template-rows: auto auto auto;
+      }
+
+      .topbar {
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+      }
+
+      .brand {
+        grid-column: 1 / -1;
+      }
+    }
+
+    @media (max-width: 720px) {
+      .arena {
+        padding: 10px;
+      }
+
+      .topbar {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+      }
+
+      .answers {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+      }
+
+      .answer {
+        min-height: 108px;
+      }
+
+      .answer canvas {
+        height: 70px;
+      }
+
+      #stage {
+        min-height: 330px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <main class="app">
+    <section class="arena" aria-label="Axiom Rift arena">
+      <header class="topbar">
+        <div class="brand">
+          <h1>Axiom Rift</h1>
+          <div class="sub"><span class="pulse-dot"></span><span id="phaseLabel">abstract adaptive gauntlet</span></div>
+        </div>
+        <div class="metric"><span>Score</span><strong id="score">0</strong></div>
+        <div class="metric"><span>Level</span><strong id="level">01</strong></div>
+        <div class="metric"><span>Streak</span><strong id="streak">0</strong></div>
+        <div class="metric"><span>Accuracy</span><strong id="accuracy">--</strong></div>
+        <div class="metric"><span>Best</span><strong id="best">0</strong></div>
+      </header>
+
+      <div class="stage-wrap">
+        <canvas id="stage"></canvas>
+        <div class="timer" aria-hidden="true"><div id="timerFill"></div></div>
+        <div class="veil" id="veil">
+          <div class="start-panel">
+            <h2>Hard Mode First</h2>
+            <p>Mixed working memory, interference, switching, change detection, rotation, and analogical transfer. Study-inspired, not a clinical claim.</p>
+            <div class="start-actions">
+              <button class="command" id="startBtn">Start Rift</button>
+              <button class="ghost" id="silentBtn">Silent Start</button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="answers" id="answers" aria-label="answer choices">
+        <button class="answer" data-index="0" disabled><canvas></canvas><b><span>1</span><em>A</em></b></button>
+        <button class="answer" data-index="1" disabled><canvas></canvas><b><span>2</span><em>B</em></b></button>
+        <button class="answer" data-index="2" disabled><canvas></canvas><b><span>3</span><em>C</em></b></button>
+        <button class="answer" data-index="3" disabled><canvas></canvas><b><span>4</span><em>D</em></b></button>
+      </div>
+    </section>
+
+    <aside class="side" aria-label="session panel">
+      <section class="cue-block">
+        <div class="cue-line"><span>Chamber</span><strong id="chamber">Dormant</strong></div>
+        <div class="cue-line"><span>Load</span><strong id="load">0</strong></div>
+        <div class="rule-card">
+          <div class="rule-orb" id="ruleGlyph">0</div>
+          <div class="rule-copy">
+            <h2 id="ruleTitle">Null Field</h2>
+            <p id="ruleText">The first fracture starts when the clock starts.</p>
+          </div>
+        </div>
+      </section>
+
+      <section class="log" id="log" aria-label="recent trials"></section>
+
+      <section class="research">
+        <strong>Study Roots</strong>
+        <span>Dual n-back, Stroop interference, predictable task switching, visual change capacity, and mental rotation. Training transfer is debated, so this is a demanding cognitive game rather than a promise.</span>
+        <span>
+          <a href="https://www.pnas.org/doi/10.1073/pnas.0801268105" target="_blank" rel="noreferrer">Jaeggi 2008</a>,
+          <a href="https://psychclassics.yorku.ca/Stroop/" target="_blank" rel="noreferrer">Stroop 1935</a>,
+          <a href="https://doi.org/10.1037/0096-1523.21.1.207" target="_blank" rel="noreferrer">Rogers 1995</a>,
+          <a href="https://doi.org/10.1038/36846" target="_blank" rel="noreferrer">Luck 1997</a>,
+          <a href="https://doi.org/10.1126/science.171.3972.701" target="_blank" rel="noreferrer">Shepard 1971</a>
+        </span>
+      </section>
+
+      <div class="foot-actions">
+        <button class="ghost" id="pauseBtn">Pause</button>
+        <button class="ghost" id="resetBtn">Reset</button>
+      </div>
+    </aside>
+  </main>
+
+  <script>
+    (() => {
+      "use strict";
+
+      const palette = [
+        { name: "TEAL", hex: "#55d7c7" },
+        { name: "ROSE", hex: "#ff6b7a" },
+        { name: "GOLD", hex: "#f4bd4b" },
+        { name: "GREEN", hex: "#95dd64" },
+        { name: "VIOLET", hex: "#b297ff" },
+        { name: "WHITE", hex: "#f3f0e8" }
+      ];
+
+      const glyphs = ["AX", "NO", "VE", "RU", "IX", "OM", "SA", "QF"];
+      const chambers = {
+        nback: {
+          name: "Echo Lattice",
+          root: "adaptive dual n-back",
+          glyph: "N",
+          copy: "Recover the older trace while the current one interferes."
+        },
+        stroop: {
+          name: "Contradiction Forge",
+          root: "interference control",
+          glyph: "S",
+          copy: "Select the signaled channel while the other channel lies."
+        },
+        rotate: {
+          name: "Mirror Torsion",
+          root: "mental rotation",
+          glyph: "R",
+          copy: "Find the same object through rotation, not reflection."
+        },
+        change: {
+          name: "Vanishing Array",
+          root: "visual working memory",
+          glyph: "D",
+          copy: "Bind several objects, survive the mask, isolate the mutation."
+        },
+        analogy: {
+          name: "Operator Dream",
+          root: "relational transfer",
+          glyph: "A",
+          copy: "Infer the hidden transform and apply it to the stranger."
+        }
+      };
+
+      const dom = {
+        stage: document.getElementById("stage"),
+        timerFill: document.getElementById("timerFill"),
+        veil: document.getElementById("veil"),
+        startBtn: document.getElementById("startBtn"),
+        silentBtn: document.getElementById("silentBtn"),
+        answers: Array.from(document.querySelectorAll(".answer")),
+        score: document.getElementById("score"),
+        level: document.getElementById("level"),
+        streak: document.getElementById("streak"),
+        accuracy: document.getElementById("accuracy"),
+        best: document.getElementById("best"),
+        chamber: document.getElementById("chamber"),
+        load: document.getElementById("load"),
+        ruleGlyph: document.getElementById("ruleGlyph"),
+        ruleTitle: document.getElementById("ruleTitle"),
+        ruleText: document.getElementById("ruleText"),
+        phaseLabel: document.getElementById("phaseLabel"),
+        log: document.getElementById("log"),
+        pauseBtn: document.getElementById("pauseBtn"),
+        resetBtn: document.getElementById("resetBtn")
+      };
+
+      const ctx = dom.stage.getContext("2d");
+      const state = {
+        running: false,
+        paused: false,
+        muted: false,
+        score: 0,
+        best: Number(localStorage.getItem("axiom-rift-best") || 0),
+        level: 1,
+        streak: 0,
+        total: 0,
+        correct: 0,
+        misses: 0,
+        startedAt: 0,
+        trialStarted: 0,
+        phaseUntil: 0,
+        pausedAt: 0,
+        feedbackUntil: 0,
+        lastWasCorrect: null,
+        trial: null,
+        history: [],
+        audio: null,
+        raf: 0,
+        dpr: 1
+      };
+
+      function clamp(value, min, max) {
+        return Math.min(max, Math.max(min, value));
+      }
+
+      function rand(min, max) {
+        return min + Math.random() * (max - min);
+      }
+
+      function int(min, max) {
+        return Math.floor(rand(min, max + 1));
+      }
+
+      function pick(list) {
+        return list[Math.floor(Math.random() * list.length)];
+      }
+
+      function shuffle(list) {
+        const copy = list.slice();
+        for (let i = copy.length - 1; i > 0; i -= 1) {
+          const j = Math.floor(Math.random() * (i + 1));
+          [copy[i], copy[j]] = [copy[j], copy[i]];
+        }
+        return copy;
+      }
+
+      function cssVar(name) {
+        return getComputedStyle(document.documentElement).getPropertyValue(name).trim();
+      }
+
+      function resizeCanvas(canvas, width, height) {
+        const ratio = window.devicePixelRatio || 1;
+        canvas.width = Math.max(1, Math.floor(width * ratio));
+        canvas.height = Math.max(1, Math.floor(height * ratio));
+        canvas.style.width = `${width}px`;
+        canvas.style.height = `${height}px`;
+        const c = canvas.getContext("2d");
+        c.setTransform(ratio, 0, 0, ratio, 0, 0);
+        return c;
+      }
+
+      function fitStage() {
+        const box = dom.stage.getBoundingClientRect();
+        state.dpr = window.devicePixelRatio || 1;
+        dom.stage.width = Math.max(1, Math.floor(box.width * state.dpr));
+        dom.stage.height = Math.max(1, Math.floor(box.height * state.dpr));
+        ctx.setTransform(state.dpr, 0, 0, state.dpr, 0, 0);
+        drawAnswers();
+      }
+
+      function newStim(overrides = {}) {
+        return {
+          glyph: pick(glyphs),
+          color: int(0, palette.length - 2),
+          tone: int(0, 4),
+          orbit: int(0, 5),
+          spin: int(0, 3),
+          form: int(0, 5),
+          mirror: Math.random() < 0.5,
+          ...overrides
+        };
+      }
+
+      function stimKey(stim) {
+        return [stim.glyph, stim.color, stim.tone, stim.orbit, stim.spin, stim.form, stim.mirror ? 1 : 0].join(":");
+      }
+
+      function equalStim(a, b) {
+        return stimKey(a) === stimKey(b);
+      }
+
+      function mutateStim(stim, locked = []) {
+        const copy = { ...stim };
+        const fields = shuffle(["glyph", "color", "tone", "orbit", "spin", "form", "mirror"]).filter((field) => !locked.includes(field));
+        changeField(copy, fields[0], stim);
+        return copy;
+      }
+
+      function changeField(copy, field, reference = copy) {
+        if (field === "glyph") {
+          do copy.glyph = pick(glyphs); while (copy.glyph === reference.glyph);
+        } else if (field === "mirror") {
+          copy.mirror = !copy.mirror;
+        } else {
+          const max = field === "color" ? palette.length - 2 : field === "tone" ? 4 : field === "form" ? 5 : 5;
+          do copy[field] = int(0, max); while (copy[field] === reference[field]);
+        }
+        return copy;
+      }
+
+      function difficulty() {
+        const level = state.level;
+        return {
+          n: clamp(1 + Math.floor(level / 3), 1, 5),
+          time: clamp(7600 - level * 380, 2300, 7600),
+          reveal: clamp(1220 - level * 64, 380, 1220),
+          objects: clamp(4 + Math.floor(level / 2), 4, 10),
+          noise: clamp(0.14 + level * 0.045, 0.14, 0.62)
+        };
+      }
+
+      function makeNBackTrial(diff) {
+        const dims = shuffle(["glyph", "color", "tone", "orbit", "form"]).slice(0, clamp(1 + Math.floor(state.level / 5), 1, 3));
+        const current = newStim();
+        const target = state.history.length >= diff.n ? state.history[state.history.length - diff.n] : newStim();
+        const options = [target];
+        while (options.length < 4) {
+          const noisy = mutateStim(target, []);
+          changeField(noisy, pick(dims), target);
+          if (!options.some((item) => equalStim(item, noisy))) options.push(noisy);
+        }
+        const shuffled = shuffle(options);
+        return {
+          type: "nback",
+          chamber: chambers.nback,
+          prompt: `N-${diff.n} ${dims.map((dim) => dim.toUpperCase()).join("+")}`,
+          current,
+          target,
+          options: shuffled,
+          correctIndex: shuffled.findIndex((item) => equalStim(item, target)),
+          timeLimit: diff.time,
+          created: performance.now()
+        };
+      }
+
+      function makeStroopTrial(diff) {
+        const wordIndex = int(0, 3);
+        let inkIndex = int(0, 3);
+        if (inkIndex === wordIndex) inkIndex = (inkIndex + int(1, 3)) % 4;
+        const channel = Math.random() < 0.5 ? "INK" : "WORD";
+        const options = [0, 1, 2, 3].map((colorIndex) => ({
+          colorIndex,
+          glyph: palette[colorIndex].name,
+          color: palette[colorIndex].hex
+        }));
+        return {
+          type: "stroop",
+          chamber: chambers.stroop,
+          prompt: channel,
+          wordIndex,
+          inkIndex,
+          options,
+          correctIndex: channel === "INK" ? inkIndex : wordIndex,
+          timeLimit: diff.time * 0.82,
+          created: performance.now(),
+          noise: diff.noise
+        };
+      }
+
+      function makeRotationTrial(diff) {
+        const base = newStim({ mirror: false });
+        const correct = { ...base, spin: int(1, 3), mirror: false };
+        const options = [correct];
+        options.push({ ...base, spin: correct.spin, mirror: true });
+        options.push(mutateStim({ ...base, spin: (correct.spin + 1) % 4, mirror: false }, ["color"]));
+        options.push(mutateStim({ ...base, spin: (correct.spin + 3) % 4, mirror: true }, ["color"]));
+        const shuffled = shuffle(options);
+        return {
+          type: "rotate",
+          chamber: chambers.rotate,
+          prompt: `ROTATE ${90 * ((correct.spin + 4) % 4)} DEG`,
+          base,
+          options: shuffled,
+          correctIndex: shuffled.findIndex((item) => item.spin === correct.spin && item.mirror === false && item.form === correct.form),
+          timeLimit: diff.time * 0.9,
+          created: performance.now()
+        };
+      }
+
+      function makeChangeTrial(diff) {
+        const count = diff.objects;
+        const cells = [];
+        for (let i = 0; i < count; i += 1) {
+          cells.push({
+            id: i,
+            x: ((i * 37) % 100) / 100,
+            y: ((i * 53 + 19) % 100) / 100,
+            stim: newStim({ form: int(0, 5), color: i % 5 })
+          });
+        }
+        const changedIndex = int(0, count - 1);
+        const after = cells.map((cell, index) => index === changedIndex ? { ...cell, stim: mutateStim(cell.stim, ["orbit"]) } : { ...cell, stim: { ...cell.stim } });
+        const candidates = shuffle([changedIndex, ...shuffle(cells.map((cell) => cell.id).filter((id) => id !== changedIndex)).slice(0, 3)]);
+        return {
+          type: "change",
+          chamber: chambers.change,
+          prompt: `DELTA ${count}`,
+          before: cells,
+          after,
+          options: candidates.map((id) => ({ id, stim: after[id].stim })),
+          correctIndex: candidates.indexOf(changedIndex),
+          timeLimit: diff.time + diff.reveal,
+          reveal: diff.reveal,
+          mask: 280,
+          created: performance.now(),
+          phase: "study"
+        };
+      }
+
+      function applyOp(stim, op) {
+        const out = { ...stim };
+        if (op.color) out.color = (out.color + op.color + palette.length - 1) % (palette.length - 1);
+        if (op.form) out.form = (out.form + op.form + 6) % 6;
+        if (op.spin) out.spin = (out.spin + op.spin + 4) % 4;
+        if (op.tone) out.tone = (out.tone + op.tone + 5) % 5;
+        if (op.mirror) out.mirror = !out.mirror;
+        if (op.glyph) out.glyph = glyphs[(glyphs.indexOf(out.glyph) + op.glyph + glyphs.length) % glyphs.length];
+        return out;
+      }
+
+      function makeAnalogyTrial(diff) {
+        const op = {
+          color: int(1, 3),
+          form: int(1, 2),
+          spin: int(1, 3),
+          tone: Math.random() < 0.6 ? int(1, 2) : 0,
+          mirror: Math.random() < 0.5,
+          glyph: Math.random() < 0.55 ? int(1, 2) : 0
+        };
+        const a = newStim();
+        const b = applyOp(a, op);
+        const c = newStim();
+        const correct = applyOp(c, op);
+        const options = [correct];
+        while (options.length < 4) {
+          const brokenOp = { ...op };
+          const keys = shuffle(Object.keys(op));
+          const key = keys[0];
+          if (typeof brokenOp[key] === "boolean") {
+            brokenOp[key] = !brokenOp[key];
+          } else {
+            brokenOp[key] = (brokenOp[key] || 0) + pick([-1, 1, 2]);
+          }
+          const candidate = applyOp(c, brokenOp);
+          if (!options.some((item) => equalStim(item, candidate))) options.push(candidate);
+        }
+        const shuffled = shuffle(options);
+        return {
+          type: "analogy",
+          chamber: chambers.analogy,
+          prompt: "A:B :: C:?",
+          a,
+          b,
+          c,
+          options: shuffled,
+          correctIndex: shuffled.findIndex((item) => equalStim(item, correct)),
+          timeLimit: diff.time * 1.08,
+          created: performance.now()
+        };
+      }
+
+      function makeTrial() {
+        const diff = difficulty();
+        const bag = ["nback", "stroop", "rotate", "change", "analogy"];
+        if (state.total < 2) bag.push("nback", "stroop");
+        const type = pick(bag);
+        const makers = {
+          nback: makeNBackTrial,
+          stroop: makeStroopTrial,
+          rotate: makeRotationTrial,
+          change: makeChangeTrial,
+          analogy: makeAnalogyTrial
+        };
+        return makers[type](diff);
+      }
+
+      function startTrial() {
+        state.trial = makeTrial();
+        state.trialStarted = performance.now();
+        state.feedbackUntil = 0;
+        state.lastWasCorrect = null;
+        const trial = state.trial;
+        if (trial.type === "change") {
+          state.phaseUntil = state.trialStarted + trial.reveal;
+          trial.phase = "study";
+          dom.answers.forEach((button) => {
+            button.disabled = true;
+          });
+        } else {
+          state.phaseUntil = 0;
+        }
+        dom.answers.forEach((button) => {
+          if (trial.type !== "change") button.disabled = false;
+          button.classList.remove("correct", "wrong");
+        });
+        updateCue();
+        drawAnswers();
+        if (trial.type === "nback" && !state.muted) playTone(230 + trial.current.tone * 95, 0.12, 0.055);
+        if (trial.type === "stroop" && !state.muted) playTone(190 + trial.inkIndex * 85, 0.09, 0.035);
+      }
+
+      function updateCue() {
+        const trial = state.trial;
+        const diff = difficulty();
+        if (!trial) return;
+        dom.chamber.textContent = trial.chamber.name;
+        dom.load.textContent = `${String(state.level).padStart(2, "0")} / N${diff.n}`;
+        dom.ruleGlyph.textContent = trial.chamber.glyph;
+        dom.ruleTitle.textContent = trial.prompt;
+        dom.ruleText.textContent = trial.chamber.copy;
+        dom.phaseLabel.textContent = trial.chamber.root;
+      }
+
+      function updateHud() {
+        dom.score.textContent = String(state.score);
+        dom.level.textContent = String(state.level).padStart(2, "0");
+        dom.streak.textContent = String(state.streak);
+        dom.best.textContent = String(state.best);
+        dom.accuracy.textContent = state.total ? `${Math.round((state.correct / state.total) * 100)}%` : "--";
+      }
+
+      function answer(index) {
+        if (!state.running || state.paused || !state.trial || state.feedbackUntil) return;
+        const now = performance.now();
+        const trial = state.trial;
+        if (trial.type === "change" && trial.phase !== "probe") return;
+        const isCorrect = index === trial.correctIndex;
+        state.total += 1;
+        state.correct += isCorrect ? 1 : 0;
+        state.streak = isCorrect ? state.streak + 1 : 0;
+        state.misses = isCorrect ? 0 : state.misses + 1;
+
+        const elapsed = now - state.trialStarted;
+        const speed = clamp(1 - elapsed / trial.timeLimit, 0, 1);
+        if (isCorrect) {
+          const points = Math.round(80 + state.level * 16 + speed * 120 + state.streak * 7);
+          state.score += points;
+          if (state.streak % 3 === 0) state.level = clamp(state.level + 1, 1, 18);
+          if (!state.muted) playTone(580 + state.level * 18, 0.12, 0.075);
+        } else {
+          state.level = clamp(state.level - (state.misses >= 2 ? 2 : 1), 1, 18);
+          if (!state.muted) playTone(130, 0.16, 0.07);
+        }
+
+        if (state.score > state.best) {
+          state.best = state.score;
+          localStorage.setItem("axiom-rift-best", String(state.best));
+        }
+
+        state.lastWasCorrect = isCorrect;
+        state.feedbackUntil = now + 680;
+        dom.answers.forEach((button, buttonIndex) => {
+          button.disabled = true;
+          button.classList.toggle("correct", buttonIndex === trial.correctIndex);
+          button.classList.toggle("wrong", buttonIndex === index && !isCorrect);
+        });
+        addLog(trial, isCorrect);
+        if (trial.current) state.history.push(trial.current);
+        else state.history.push(newStim());
+        if (state.history.length > 24) state.history.shift();
+        updateHud();
+      }
+
+      function timeoutTrial() {
+        if (!state.trial || state.feedbackUntil) return;
+        state.total += 1;
+        state.streak = 0;
+        state.misses += 1;
+        state.level = clamp(state.level - 1, 1, 18);
+        state.lastWasCorrect = false;
+        state.feedbackUntil = performance.now() + 720;
+        dom.answers.forEach((button, buttonIndex) => {
+          button.disabled = true;
+          button.classList.toggle("correct", buttonIndex === state.trial.correctIndex);
+          button.classList.remove("wrong");
+        });
+        addLog(state.trial, false);
+        state.history.push(state.trial.current || newStim());
+        if (state.history.length > 24) state.history.shift();
+        if (!state.muted) playTone(92, 0.22, 0.08);
+        updateHud();
+      }
+
+      function addLog(trial, isCorrect) {
+        const item = document.createElement("div");
+        item.className = "log-entry";
+        const canvas = document.createElement("canvas");
+        const label = document.createElement("span");
+        const mark = document.createElement("strong");
+        label.textContent = `${trial.chamber.name} | ${trial.prompt}`;
+        mark.textContent = isCorrect ? "HIT" : "MISS";
+        mark.style.color = isCorrect ? cssVar("--good") : cssVar("--bad");
+        item.append(canvas, label, mark);
+        dom.log.prepend(item);
+        while (dom.log.children.length > 11) dom.log.lastElementChild.remove();
+        const c = resizeCanvas(canvas, 48, 36);
+        c.clearRect(0, 0, 48, 36);
+        c.fillStyle = "rgba(255,255,255,0.04)";
+        c.fillRect(0, 0, 48, 36);
+        drawMiniStim(c, trial.current || trial.base || trial.a || trial.after?.[0]?.stim || newStim(), 24, 18, 14, { alpha: 0.92 });
+      }
+
+      function playTone(freq, duration, gainValue) {
+        try {
+          if (!state.audio) {
+            const AudioContext = window.AudioContext || window.webkitAudioContext;
+            state.audio = new AudioContext();
+          }
+          const ctxAudio = state.audio;
+          if (ctxAudio.state === "suspended") ctxAudio.resume();
+          const osc = ctxAudio.createOscillator();
+          const gain = ctxAudio.createGain();
+          osc.type = "sine";
+          osc.frequency.value = freq;
+          gain.gain.setValueAtTime(0.0001, ctxAudio.currentTime);
+          gain.gain.exponentialRampToValueAtTime(gainValue, ctxAudio.currentTime + 0.015);
+          gain.gain.exponentialRampToValueAtTime(0.0001, ctxAudio.currentTime + duration);
+          osc.connect(gain);
+          gain.connect(ctxAudio.destination);
+          osc.start();
+          osc.stop(ctxAudio.currentTime + duration + 0.02);
+        } catch (error) {
+          state.muted = true;
+        }
+      }
+
+      function drawBackground(width, height, t) {
+        ctx.clearRect(0, 0, width, height);
+        ctx.fillStyle = "#10100f";
+        ctx.fillRect(0, 0, width, height);
+        ctx.save();
+        ctx.globalAlpha = 0.18;
+        for (let i = 0; i < 44; i += 1) {
+          const x = (Math.sin(i * 12.989 + t * 0.00017) * 0.5 + 0.5) * width;
+          const y = (Math.cos(i * 8.113 + t * 0.00021) * 0.5 + 0.5) * height;
+          const r = 1.2 + ((i * 7) % 5);
+          ctx.fillStyle = palette[i % palette.length].hex;
+          ctx.beginPath();
+          ctx.arc(x, y, r, 0, Math.PI * 2);
+          ctx.fill();
+        }
+        ctx.strokeStyle = "rgba(243,240,232,0.08)";
+        ctx.lineWidth = 1;
+        for (let y = 32; y < height; y += 34) {
+          ctx.beginPath();
+          ctx.moveTo(0, y + Math.sin(t * 0.001 + y) * 2);
+          ctx.lineTo(width, y + Math.cos(t * 0.001 + y) * 2);
+          ctx.stroke();
+        }
+        ctx.restore();
+      }
+
+      function drawLabel(text, x, y, size = 16, color = "#f3f0e8", align = "center") {
+        ctx.save();
+        ctx.fillStyle = color;
+        ctx.font = `800 ${size}px Inter, system-ui, sans-serif`;
+        ctx.textAlign = align;
+        ctx.textBaseline = "middle";
+        ctx.fillText(text, x, y);
+        ctx.restore();
+      }
+
+      function drawGlyphShape(c, stim, x, y, radius, options = {}) {
+        const color = palette[stim.color % palette.length].hex;
+        const alpha = options.alpha ?? 1;
+        const rotation = ((stim.spin || 0) * Math.PI) / 2 + (options.extraRotation || 0);
+        const sides = 3 + (stim.form % 5);
+        c.save();
+        c.translate(x, y);
+        c.rotate(rotation);
+        if (stim.mirror) c.scale(-1, 1);
+        c.globalAlpha = alpha;
+        c.lineWidth = Math.max(2, radius * 0.08);
+        c.strokeStyle = color;
+        c.fillStyle = hexToRgba(color, 0.14);
+        c.beginPath();
+        for (let i = 0; i < sides; i += 1) {
+          const theta = -Math.PI / 2 + (i / sides) * Math.PI * 2;
+          const warp = 0.78 + 0.25 * Math.sin(i * 1.7 + stim.orbit);
+          const px = Math.cos(theta) * radius * warp;
+          const py = Math.sin(theta) * radius * warp;
+          if (i === 0) c.moveTo(px, py);
+          else c.lineTo(px, py);
+        }
+        c.closePath();
+        c.fill();
+        c.stroke();
+        c.strokeStyle = "rgba(243,240,232,0.55)";
+        c.beginPath();
+        c.moveTo(-radius * 0.5, 0);
+        c.bezierCurveTo(-radius * 0.2, -radius * 0.6, radius * 0.35, radius * 0.5, radius * 0.62, -radius * 0.1);
+        c.stroke();
+        c.fillStyle = "#f3f0e8";
+        c.font = `900 ${Math.max(11, radius * 0.36)}px Inter, system-ui, sans-serif`;
+        c.textAlign = "center";
+        c.textBaseline = "middle";
+        c.fillText(stim.glyph, 0, 0);
+        c.restore();
+      }
+
+      function drawMiniStim(c, stim, x, y, r, options = {}) {
+        c.save();
+        c.globalAlpha = options.alpha ?? 1;
+        c.strokeStyle = hexToRgba(palette[stim.color % palette.length].hex, 0.46);
+        c.lineWidth = 1.5;
+        for (let i = 0; i <= stim.tone; i += 1) {
+          c.beginPath();
+          c.arc(x, y, r + i * 3.2, 0, Math.PI * 2);
+          c.stroke();
+        }
+        drawGlyphShape(c, stim, x, y, r, options);
+        c.restore();
+      }
+
+      function drawStimCluster(stim, x, y, r, t, label) {
+        ctx.save();
+        for (let i = 0; i < 6; i += 1) {
+          const angle = (i / 6) * Math.PI * 2 + t * 0.00035 * (stim.orbit + 1);
+          const px = x + Math.cos(angle) * (r * 1.15 + stim.orbit * 4);
+          const py = y + Math.sin(angle) * (r * 1.15 + stim.orbit * 4);
+          ctx.fillStyle = hexToRgba(palette[(stim.color + i) % palette.length].hex, 0.36);
+          ctx.beginPath();
+          ctx.arc(px, py, 3 + ((stim.tone + i) % 3), 0, Math.PI * 2);
+          ctx.fill();
+        }
+        drawMiniStim(ctx, stim, x, y, r, { extraRotation: Math.sin(t * 0.001) * 0.05 });
+        if (label) drawLabel(label, x, y + r * 1.62, 13, "rgba(243,240,232,0.68)");
+        ctx.restore();
+      }
+
+      function drawNBack(trial, width, height, t) {
+        const cx = width * 0.5;
+        const cy = height * 0.5;
+        const r = Math.min(width, height) * 0.14;
+        drawStimCluster(trial.current, cx, cy, r, t, "NOW");
+        ctx.save();
+        ctx.strokeStyle = "rgba(243,240,232,0.18)";
+        ctx.setLineDash([9, 10]);
+        ctx.lineWidth = 2;
+        ctx.beginPath();
+        ctx.arc(cx, cy, r * 1.75, 0, Math.PI * 2);
+        ctx.stroke();
+        ctx.restore();
+        drawLabel(trial.prompt, cx, Math.max(54, cy - r * 2.2), 24, "#f4bd4b");
+      }
+
+      function drawStroop(trial, width, height, t) {
+        const cx = width * 0.5;
+        const cy = height * 0.52;
+        const colorWord = palette[trial.wordIndex].name;
+        const ink = palette[trial.inkIndex].hex;
+        ctx.save();
+        ctx.translate(cx, cy);
+        ctx.rotate(Math.sin(t * 0.0011) * 0.035);
+        ctx.font = `900 ${Math.min(width * 0.16, 92)}px Inter, system-ui, sans-serif`;
+        ctx.textAlign = "center";
+        ctx.textBaseline = "middle";
+        ctx.fillStyle = hexToRgba(ink, 0.18);
+        ctx.fillText(colorWord, 8, 8);
+        ctx.fillStyle = ink;
+        ctx.fillText(colorWord, 0, 0);
+        ctx.strokeStyle = "rgba(243,240,232,0.42)";
+        ctx.lineWidth = 2;
+        ctx.strokeText(colorWord, 0, 0);
+        ctx.restore();
+        drawLabel(trial.prompt, cx, cy - 118, 30, "#f3f0e8");
+        for (let i = 0; i < 7; i += 1) {
+          const angle = t * 0.001 + i;
+          ctx.fillStyle = hexToRgba(palette[(trial.wordIndex + i) % 5].hex, 0.36);
+          ctx.fillRect(cx + Math.cos(angle) * 180, cy + Math.sin(angle * 1.2) * 130, 18, 18);
+        }
+      }
+
+      function drawRotation(trial, width, height, t) {
+        const cx = width * 0.5;
+        const cy = height * 0.5;
+        const r = Math.min(width, height) * 0.16;
+        drawStimCluster({ ...trial.base, spin: 0, mirror: false }, cx, cy, r, t, "SOURCE");
+        ctx.save();
+        ctx.strokeStyle = "rgba(243,240,232,0.18)";
+        ctx.lineWidth = 2;
+        ctx.beginPath();
+        ctx.arc(cx, cy, r * 1.85, t * 0.001, t * 0.001 + Math.PI * 1.55);
+        ctx.stroke();
+        ctx.restore();
+        drawLabel(trial.prompt, cx, Math.max(54, cy - r * 2.2), 24, "#55d7c7");
+      }
+
+      function drawChange(trial, width, height, t) {
+        const now = performance.now();
+        if (!state.paused && trial.phase === "study" && now > state.phaseUntil) {
+          trial.phase = "mask";
+          state.phaseUntil = now + trial.mask;
+          dom.answers.forEach((button) => {
+            button.disabled = true;
+          });
+          drawAnswers();
+        } else if (!state.paused && trial.phase === "mask" && now > state.phaseUntil) {
+          trial.phase = "probe";
+          dom.answers.forEach((button) => {
+            button.disabled = false;
+          });
+          drawAnswers();
+        }
+
+        const cells = trial.phase === "probe" ? trial.after : trial.before;
+        const margin = Math.min(width, height) * 0.18;
+        const usableW = width - margin * 2;
+        const usableH = height - margin * 2;
+        if (trial.phase === "mask") {
+          ctx.save();
+          for (let i = 0; i < 96; i += 1) {
+            ctx.fillStyle = hexToRgba(palette[i % palette.length].hex, 0.12 + (i % 4) * 0.04);
+            ctx.fillRect(rand(margin, width - margin), rand(margin, height - margin), rand(12, 50), rand(8, 36));
+          }
+          ctx.restore();
+          drawLabel("MASK", width * 0.5, height * 0.5, 34, "#ff6b7a");
+          return;
+        }
+        cells.forEach((cell, index) => {
+          const x = margin + cell.x * usableW;
+          const y = margin + cell.y * usableH;
+          ctx.save();
+          ctx.strokeStyle = "rgba(243,240,232,0.12)";
+          ctx.beginPath();
+          ctx.moveTo(width * 0.5, height * 0.5);
+          ctx.lineTo(x, y);
+          ctx.stroke();
+          drawMiniStim(ctx, cell.stim, x, y, 18 + (index % 3) * 3, { alpha: trial.phase === "study" ? 1 : 0.92 });
+          ctx.restore();
+        });
+        drawLabel(trial.phase === "study" ? "BIND" : "DELTA", width * 0.5, Math.max(46, margin * 0.55), 24, "#95dd64");
+      }
+
+      function drawAnalogy(trial, width, height, t) {
+        const y = height * 0.5;
+        const gap = width / 5;
+        const r = Math.min(width, height) * 0.095;
+        const nodes = [
+          { stim: trial.a, x: gap, label: "A" },
+          { stim: trial.b, x: gap * 2, label: "B" },
+          { stim: trial.c, x: gap * 3.25, label: "C" }
+        ];
+        ctx.save();
+        ctx.strokeStyle = "rgba(243,240,232,0.22)";
+        ctx.lineWidth = 2;
+        ctx.beginPath();
+        ctx.moveTo(gap + r * 1.4, y);
+        ctx.lineTo(gap * 2 - r * 1.4, y);
+        ctx.moveTo(gap * 3.25 + r * 1.4, y);
+        ctx.lineTo(gap * 4.15, y);
+        ctx.stroke();
+        drawLabel("::", gap * 2.62, y, 36, "rgba(243,240,232,0.58)");
+        drawLabel("?", gap * 4.38, y, 54, "#f4bd4b");
+        ctx.restore();
+        nodes.forEach((node) => drawStimCluster(node.stim, node.x, y, r, t, node.label));
+        drawLabel(trial.prompt, width * 0.5, Math.max(48, y - r * 2.2), 24, "#b297ff");
+      }
+
+      function drawFeedback(width, height) {
+        if (!state.feedbackUntil) return;
+        const remaining = clamp((state.feedbackUntil - performance.now()) / 680, 0, 1);
+        ctx.save();
+        ctx.globalAlpha = remaining * 0.26;
+        ctx.fillStyle = state.lastWasCorrect ? "#6ef3aa" : "#ff505f";
+        ctx.fillRect(0, 0, width, height);
+        ctx.restore();
+        drawLabel(state.lastWasCorrect ? "HIT" : "MISS", width * 0.5, height * 0.18, 22, state.lastWasCorrect ? "#6ef3aa" : "#ff505f");
+      }
+
+      function drawIdle(width, height, t) {
+        const cx = width * 0.5;
+        const cy = height * 0.5;
+        const base = newStim({ glyph: "AX", color: 0, form: 5, spin: Math.floor(t / 900) % 4, mirror: false });
+        drawStimCluster(base, cx, cy, Math.min(width, height) * 0.16, t, "RIFT");
+        drawLabel("AXIOM RIFT", cx, cy - Math.min(width, height) * 0.25, 26, "#f3f0e8");
+      }
+
+      function render(time) {
+        const box = dom.stage.getBoundingClientRect();
+        const width = box.width;
+        const height = box.height;
+        drawBackground(width, height, time);
+
+        if (!state.running || !state.trial) {
+          drawIdle(width, height, time);
+        } else {
+          const trial = state.trial;
+          if (trial.type === "nback") drawNBack(trial, width, height, time);
+          if (trial.type === "stroop") drawStroop(trial, width, height, time);
+          if (trial.type === "rotate") drawRotation(trial, width, height, time);
+          if (trial.type === "change") drawChange(trial, width, height, time);
+          if (trial.type === "analogy") drawAnalogy(trial, width, height, time);
+          drawFeedback(width, height);
+
+          if (!state.paused && !state.feedbackUntil) {
+            const elapsed = performance.now() - state.trialStarted;
+            const available = trial.type === "change" ? trial.timeLimit : trial.timeLimit;
+            const scale = clamp(1 - elapsed / available, 0, 1);
+            dom.timerFill.style.transform = `scaleX(${scale})`;
+            if (scale <= 0 || (trial.type === "change" && trial.phase !== "probe" && elapsed > available)) timeoutTrial();
+          }
+
+          if (state.feedbackUntil && performance.now() > state.feedbackUntil) {
+            state.feedbackUntil = 0;
+            startTrial();
+          }
+        }
+
+        state.raf = requestAnimationFrame(render);
+      }
+
+      function hexToRgba(hex, alpha) {
+        const value = hex.replace("#", "");
+        const r = parseInt(value.slice(0, 2), 16);
+        const g = parseInt(value.slice(2, 4), 16);
+        const b = parseInt(value.slice(4, 6), 16);
+        return `rgba(${r}, ${g}, ${b}, ${alpha})`;
+      }
+
+      function drawAnswerCanvas(canvas, option, trial, index) {
+        const rect = canvas.getBoundingClientRect();
+        const c = resizeCanvas(canvas, Math.max(1, rect.width), Math.max(1, rect.height));
+        const w = rect.width;
+        const h = rect.height;
+        c.clearRect(0, 0, w, h);
+        c.fillStyle = "rgba(255,255,255,0.025)";
+        c.fillRect(0, 0, w, h);
+        c.strokeStyle = "rgba(243,240,232,0.12)";
+        c.strokeRect(0.5, 0.5, w - 1, h - 1);
+
+        if (!trial) {
+          drawMiniStim(c, newStim({ glyph: glyphs[index], color: index }), w / 2, h / 2, Math.min(w, h) * 0.22, { alpha: 0.4 });
+          return;
+        }
+        if (trial.type === "stroop") {
+          c.fillStyle = option.color;
+          c.fillRect(w * 0.18, h * 0.2, w * 0.64, h * 0.42);
+          c.fillStyle = "#11110f";
+          c.font = `900 ${Math.min(18, w * 0.18)}px Inter, system-ui, sans-serif`;
+          c.textAlign = "center";
+          c.textBaseline = "middle";
+          c.fillText(option.glyph, w / 2, h * 0.42);
+          return;
+        }
+        if (trial.type === "change") {
+          if (trial.phase !== "probe") {
+            c.fillStyle = "rgba(243,240,232,0.12)";
+            for (let i = 0; i < 10; i += 1) c.fillRect(rand(0, w), rand(0, h), rand(8, 24), rand(3, 14));
+            return;
+          }
+          drawMiniStim(c, option.stim, w / 2, h / 2, Math.min(w, h) * 0.24, { alpha: 0.95 });
+          c.fillStyle = "rgba(243,240,232,0.76)";
+          c.font = "800 11px Inter, system-ui, sans-serif";
+          c.textAlign = "center";
+          c.fillText(`CELL ${option.id + 1}`, w / 2, h - 10);
+          return;
+        }
+        drawMiniStim(c, option, w / 2, h / 2, Math.min(w, h) * 0.24, { alpha: 0.96 });
+      }
+
+      function drawAnswers() {
+        dom.answers.forEach((button, index) => {
+          const canvas = button.querySelector("canvas");
+          const option = state.trial?.options?.[index] || newStim({ glyph: glyphs[index], color: index });
+          drawAnswerCanvas(canvas, option, state.trial, index);
+        });
+      }
+
+      function start({ muted = false } = {}) {
+        state.running = true;
+        state.paused = false;
+        state.muted = muted;
+        state.score = 0;
+        state.level = 1;
+        state.streak = 0;
+        state.total = 0;
+        state.correct = 0;
+        state.misses = 0;
+        state.history = Array.from({ length: 5 }, () => newStim());
+        state.startedAt = performance.now();
+        dom.log.replaceChildren();
+        dom.veil.hidden = true;
+        dom.pauseBtn.textContent = "Pause";
+        updateHud();
+        startTrial();
+      }
+
+      function reset() {
+        state.running = false;
+        state.paused = false;
+        state.trial = null;
+        state.score = 0;
+        state.level = 1;
+        state.streak = 0;
+        state.total = 0;
+        state.correct = 0;
+        state.misses = 0;
+        state.history = [];
+        state.feedbackUntil = 0;
+        state.pausedAt = 0;
+        dom.log.replaceChildren();
+        dom.timerFill.style.transform = "scaleX(1)";
+        dom.veil.hidden = false;
+        dom.chamber.textContent = "Dormant";
+        dom.load.textContent = "0";
+        dom.ruleGlyph.textContent = "0";
+        dom.ruleTitle.textContent = "Null Field";
+        dom.ruleText.textContent = "The first fracture starts when the clock starts.";
+        dom.phaseLabel.textContent = "abstract adaptive gauntlet";
+        dom.answers.forEach((button) => {
+          button.disabled = true;
+          button.classList.remove("correct", "wrong");
+        });
+        updateHud();
+        drawAnswers();
+      }
+
+      function togglePause() {
+        if (!state.running) return;
+        state.paused = !state.paused;
+        dom.pauseBtn.textContent = state.paused ? "Resume" : "Pause";
+        if (state.paused) {
+          state.pausedAt = performance.now();
+        } else if (state.trial) {
+          const pausedFor = performance.now() - state.pausedAt;
+          state.trialStarted += pausedFor;
+          if (state.phaseUntil) state.phaseUntil += pausedFor;
+          if (state.feedbackUntil) state.feedbackUntil += pausedFor;
+          state.pausedAt = 0;
+        }
+      }
+
+      dom.startBtn.addEventListener("click", () => start({ muted: false }));
+      dom.silentBtn.addEventListener("click", () => start({ muted: true }));
+      dom.resetBtn.addEventListener("click", reset);
+      dom.pauseBtn.addEventListener("click", togglePause);
+      dom.answers.forEach((button) => {
+        button.addEventListener("click", () => answer(Number(button.dataset.index)));
+      });
+
+      window.addEventListener("keydown", (event) => {
+        if (event.repeat) return;
+        const map = { "1": 0, "2": 1, "3": 2, "4": 3, a: 0, b: 1, c: 2, d: 3 };
+        const key = event.key.toLowerCase();
+        if (key in map) answer(map[key]);
+        if (key === " " && !state.running) start({ muted: false });
+        if (key === "p") togglePause();
+      });
+
+      window.addEventListener("resize", fitStage);
+      updateHud();
+      fitStage();
+      reset();
+      state.raf = requestAnimationFrame(render);
+    })();
+  </script>
+</body>
+</html>

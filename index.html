@@ -1,0 +1,3390 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Axiom Rift | The Hardest Braintraining App</title>
+  <meta name="description" content="Axiom Rift is an extremely difficult, study-inspired cognitive gauntlet with adaptive memory, interference, rotation, change detection, analogy, and synthesis trials.">
+  <meta name="application-name" content="Axiom Rift">
+  <meta name="theme-color" content="#11110f">
+  <link rel="canonical" href="https://the-hardest.vercel.app/">
+  <meta property="og:type" content="website">
+  <meta property="og:site_name" content="Axiom Rift">
+  <meta property="og:url" content="https://the-hardest.vercel.app/">
+  <meta property="og:title" content="Axiom Rift | The Hardest Braintraining App">
+  <meta property="og:description" content="A brutal abstract braintraining gauntlet with adaptive logic trials, clear proofs, and customizable cognitive strain.">
+  <meta property="og:image" content="https://the-hardest.vercel.app/axiom-rift-preview-v2.png">
+  <meta property="og:image:secure_url" content="https://the-hardest.vercel.app/axiom-rift-preview-v2.png">
+  <meta property="og:image:type" content="image/png">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
+  <meta property="og:image:alt" content="Axiom Rift abstract cognitive logic console preview">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:url" content="https://the-hardest.vercel.app/">
+  <meta name="twitter:title" content="Axiom Rift | The Hardest Braintraining App">
+  <meta name="twitter:description" content="A brutal abstract braintraining gauntlet with adaptive logic trials, clear proofs, and customizable cognitive strain.">
+  <meta name="twitter:image" content="https://the-hardest.vercel.app/axiom-rift-preview-v2.png">
+  <meta name="twitter:image:alt" content="Axiom Rift abstract cognitive logic console preview">
+  <style>
+    :root {
+      color-scheme: dark;
+      --bg: #11110f;
+      --ink: #f3f0e8;
+      --muted: #9b988d;
+      --line: rgba(243, 240, 232, 0.18);
+      --line-strong: rgba(243, 240, 232, 0.34);
+      --panel: rgba(22, 22, 19, 0.84);
+      --panel-solid: #181815;
+      --teal: #55d7c7;
+      --rose: #ff6b7a;
+      --green: #95dd64;
+      --gold: #f4bd4b;
+      --violet: #b297ff;
+      --bad: #ff505f;
+      --good: #6ef3aa;
+      --shadow: rgba(0, 0, 0, 0.42);
+      font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    html,
+    body {
+      height: 100%;
+      margin: 0;
+      overflow: auto;
+      background:
+        radial-gradient(circle at 22% 20%, rgba(85, 215, 199, 0.09), transparent 30%),
+        radial-gradient(circle at 78% 72%, rgba(244, 189, 75, 0.08), transparent 32%),
+        linear-gradient(135deg, #11110f 0%, #191715 48%, #101413 100%);
+      color: var(--ink);
+    }
+
+    button {
+      font: inherit;
+      color: inherit;
+    }
+
+    .app {
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) 320px;
+      height: 100vh;
+      min-height: 640px;
+    }
+
+    .arena {
+      display: grid;
+      grid-template-rows: auto minmax(0, 1fr) auto;
+      min-width: 0;
+      min-height: 0;
+      padding: 18px;
+      gap: 14px;
+    }
+
+    .topbar,
+    .answers,
+    .side {
+      background: var(--panel);
+      border: 1px solid var(--line);
+      box-shadow: 0 18px 46px var(--shadow);
+      backdrop-filter: blur(18px);
+    }
+
+    .topbar {
+      display: grid;
+      grid-template-columns: 1.1fr repeat(5, minmax(86px, auto));
+      align-items: center;
+      gap: 10px;
+      min-height: 76px;
+      padding: 10px;
+      border-radius: 8px;
+    }
+
+    .brand {
+      min-width: 0;
+      padding: 2px 6px;
+    }
+
+    .brand h1 {
+      margin: 0;
+      font-size: clamp(1.15rem, 2.2vw, 1.8rem);
+      line-height: 1;
+      letter-spacing: 0;
+      text-transform: uppercase;
+    }
+
+    .brand .sub {
+      display: flex;
+      gap: 8px;
+      align-items: center;
+      margin-top: 9px;
+      color: var(--muted);
+      font-size: 0.78rem;
+      text-transform: uppercase;
+    }
+
+    .pulse-dot {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background: var(--gold);
+      box-shadow: 0 0 18px var(--gold);
+    }
+
+    .metric {
+      display: grid;
+      gap: 4px;
+      min-width: 82px;
+      padding: 9px 10px;
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      background: rgba(255, 255, 255, 0.035);
+    }
+
+    .metric span {
+      color: var(--muted);
+      font-size: 0.66rem;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+    }
+
+    .metric strong {
+      font-size: 1rem;
+      line-height: 1;
+      white-space: nowrap;
+    }
+
+    .stage-wrap {
+      position: relative;
+      min-height: 0;
+      overflow: hidden;
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      background:
+        linear-gradient(rgba(255, 255, 255, 0.035) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(255, 255, 255, 0.035) 1px, transparent 1px),
+        rgba(10, 10, 9, 0.7);
+      background-size: 34px 34px;
+      box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.025), 0 20px 58px var(--shadow);
+    }
+
+    #stage {
+      display: block;
+      width: 100%;
+      height: 100%;
+      min-height: 360px;
+    }
+
+    .timer {
+      position: absolute;
+      left: 16px;
+      right: 16px;
+      bottom: 16px;
+      height: 8px;
+      overflow: hidden;
+      border-radius: 8px;
+      background: rgba(255, 255, 255, 0.08);
+      border: 1px solid rgba(255, 255, 255, 0.12);
+    }
+
+    .timer div {
+      width: 100%;
+      height: 100%;
+      transform-origin: left center;
+      background: linear-gradient(90deg, var(--green), var(--gold), var(--rose));
+    }
+
+    .veil {
+      position: absolute;
+      inset: 0;
+      display: grid;
+      place-items: center;
+      padding: 28px;
+      background: rgba(17, 17, 15, 0.62);
+      transition: opacity 180ms ease, visibility 180ms ease;
+    }
+
+    .veil[hidden] {
+      display: none;
+      opacity: 0;
+      visibility: hidden;
+      pointer-events: none;
+    }
+
+    .start-panel {
+      width: min(560px, 100%);
+      display: grid;
+      gap: 18px;
+      padding: 26px;
+      border-radius: 8px;
+      border: 1px solid var(--line-strong);
+      background: rgba(20, 20, 18, 0.86);
+      box-shadow: 0 24px 70px var(--shadow);
+    }
+
+    .start-panel h2 {
+      margin: 0;
+      font-size: clamp(1.5rem, 4vw, 3rem);
+      line-height: 0.95;
+      text-transform: uppercase;
+      letter-spacing: 0;
+    }
+
+    .start-panel p {
+      margin: 0;
+      color: var(--muted);
+      line-height: 1.5;
+      max-width: 52ch;
+    }
+
+    .quick-guide {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 8px;
+    }
+
+    .quick-guide span {
+      display: grid;
+      gap: 4px;
+      min-width: 0;
+      padding: 9px;
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      background: rgba(255, 255, 255, 0.035);
+      color: var(--muted);
+      font-size: 0.74rem;
+      line-height: 1.25;
+    }
+
+    .quick-guide strong {
+      color: var(--ink);
+      font-size: 0.72rem;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+    }
+
+    .start-actions {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+    }
+
+    .command,
+    .ghost {
+      min-height: 44px;
+      padding: 0 16px;
+      border-radius: 8px;
+      border: 1px solid var(--line-strong);
+      cursor: pointer;
+      transition: transform 120ms ease, border-color 120ms ease, background 120ms ease;
+    }
+
+    .command {
+      background: var(--ink);
+      color: #11110f;
+      font-weight: 800;
+      text-transform: uppercase;
+    }
+
+    .ghost {
+      background: rgba(255, 255, 255, 0.04);
+      color: var(--ink);
+    }
+
+    .command:hover,
+    .ghost:hover,
+    .answer:hover {
+      transform: translateY(-1px);
+      border-color: rgba(243, 240, 232, 0.54);
+    }
+
+    .answers {
+      display: grid;
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+      gap: 10px;
+      min-height: 144px;
+      padding: 10px;
+      border-radius: 8px;
+    }
+
+    .answer {
+      position: relative;
+      display: grid;
+      grid-template-rows: 1fr auto;
+      min-width: 0;
+      min-height: 120px;
+      padding: 8px;
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      background: rgba(255, 255, 255, 0.035);
+      cursor: pointer;
+      transition: transform 120ms ease, border-color 120ms ease, background 120ms ease, opacity 120ms ease;
+    }
+
+    .answer:disabled {
+      cursor: default;
+      opacity: 0.45;
+      transform: none;
+    }
+
+    .answer.correct {
+      border-color: rgba(110, 243, 170, 0.9);
+      background: rgba(110, 243, 170, 0.12);
+    }
+
+    .answer.wrong {
+      border-color: rgba(255, 80, 95, 0.9);
+      background: rgba(255, 80, 95, 0.12);
+    }
+
+    .answer canvas {
+      width: 100%;
+      height: 84px;
+      border-radius: 6px;
+    }
+
+    .answer b {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      min-width: 0;
+      color: var(--muted);
+      font-size: 0.74rem;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+    }
+
+    .answer b span {
+      color: var(--ink);
+      font-size: 0.82rem;
+    }
+
+    .side {
+      display: grid;
+      grid-template-rows: auto auto minmax(0, 1fr) auto;
+      gap: 14px;
+      min-height: 0;
+      overflow: auto;
+      scrollbar-gutter: stable;
+      padding: 18px;
+      border-width: 0 0 0 1px;
+      border-radius: 0;
+      background: rgba(18, 18, 16, 0.9);
+    }
+
+    .cue-block {
+      display: grid;
+      gap: 12px;
+      padding-bottom: 14px;
+      border-bottom: 1px solid var(--line);
+    }
+
+    .cue-line {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 10px;
+      color: var(--muted);
+      font-size: 0.7rem;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+    }
+
+    .cue-line strong {
+      color: var(--ink);
+      font-size: 0.8rem;
+      text-align: right;
+    }
+
+    .rule-card {
+      display: grid;
+      grid-template-columns: 74px 1fr;
+      gap: 12px;
+      align-items: center;
+    }
+
+    .adaptive-grid {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 7px;
+    }
+
+    .adaptive-note {
+      margin: -2px 0 0;
+      color: var(--muted);
+      font-size: 0.72rem;
+      line-height: 1.35;
+    }
+
+    .adaptive-note strong {
+      color: var(--teal);
+      font-weight: 900;
+    }
+
+    .adapt-axis {
+      display: grid;
+      gap: 4px;
+      min-width: 0;
+      padding: 7px;
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      background: rgba(255, 255, 255, 0.025);
+    }
+
+    .adapt-axis span {
+      display: flex;
+      justify-content: space-between;
+      gap: 6px;
+      color: var(--muted);
+      font-size: 0.58rem;
+      font-weight: 800;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+    }
+
+    .adapt-bar {
+      height: 5px;
+      overflow: hidden;
+      border-radius: 999px;
+      background: rgba(255, 255, 255, 0.08);
+    }
+
+    .adapt-bar div {
+      height: 100%;
+      width: var(--axis-value, 0%);
+      border-radius: inherit;
+      background: linear-gradient(90deg, var(--teal), var(--gold), var(--rose));
+    }
+
+    .rule-orb {
+      width: 74px;
+      aspect-ratio: 1;
+      display: grid;
+      place-items: center;
+      border-radius: 8px;
+      border: 1px solid var(--line-strong);
+      background: rgba(255, 255, 255, 0.035);
+      font-size: 1.45rem;
+      font-weight: 900;
+    }
+
+    .rule-copy {
+      min-width: 0;
+    }
+
+    .rule-copy h2 {
+      margin: 0 0 8px;
+      font-size: 1.4rem;
+      line-height: 1;
+      text-transform: uppercase;
+      letter-spacing: 0;
+    }
+
+    .rule-copy p {
+      min-height: 42px;
+      margin: 0;
+      color: var(--muted);
+      line-height: 1.35;
+      font-size: 0.92rem;
+    }
+
+    .logic-inspector {
+      display: grid;
+      gap: 10px;
+      padding: 12px;
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      background:
+        linear-gradient(135deg, rgba(85, 215, 199, 0.07), rgba(255, 255, 255, 0.02)),
+        rgba(255, 255, 255, 0.025);
+    }
+
+    .logic-head,
+    .proof-pair {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 10px;
+    }
+
+    .logic-head h3 {
+      margin: 0;
+      font-size: 0.75rem;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+    }
+
+    .truth-lock {
+      padding: 4px 7px;
+      border: 1px solid var(--line);
+      border-radius: 999px;
+      color: var(--muted);
+      font-size: 0.62rem;
+      font-weight: 800;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      white-space: nowrap;
+    }
+
+    .truth-lock.locked {
+      border-color: rgba(110, 243, 170, 0.65);
+      color: var(--good);
+      background: rgba(110, 243, 170, 0.08);
+    }
+
+    .logic-status {
+      color: var(--gold);
+      font-size: 1.05rem;
+      font-weight: 900;
+      line-height: 1;
+      text-transform: uppercase;
+    }
+
+    .logic-status.hit {
+      color: var(--good);
+    }
+
+    .logic-status.miss,
+    .logic-status.timeout {
+      color: var(--bad);
+    }
+
+    .logic-rule {
+      margin: 0;
+      color: var(--muted);
+      font-size: 0.84rem;
+      line-height: 1.4;
+    }
+
+    .proof-pair {
+      align-items: stretch;
+    }
+
+    .proof-box {
+      min-width: 0;
+      flex: 1;
+      padding: 8px;
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      background: rgba(0, 0, 0, 0.16);
+    }
+
+    .proof-box span {
+      display: block;
+      margin-bottom: 5px;
+      color: var(--muted);
+      font-size: 0.62rem;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+    }
+
+    .proof-box strong {
+      display: block;
+      min-height: 32px;
+      color: var(--ink);
+      font-size: 0.76rem;
+      line-height: 1.25;
+      overflow-wrap: anywhere;
+    }
+
+    .chip-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 5px;
+      min-height: 23px;
+    }
+
+    .feature-chip {
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+      max-width: 100%;
+      padding: 4px 6px;
+      border: 1px solid var(--line);
+      border-radius: 999px;
+      background: rgba(255, 255, 255, 0.035);
+      color: var(--muted);
+      font-size: 0.62rem;
+      font-weight: 800;
+      letter-spacing: 0.04em;
+      text-transform: uppercase;
+    }
+
+    .feature-chip b {
+      color: var(--ink);
+      font-weight: 900;
+    }
+
+    .proof-lines {
+      display: grid;
+      gap: 6px;
+      margin: 0;
+      padding: 0;
+      list-style: none;
+    }
+
+    .proof-lines li {
+      color: var(--muted);
+      font-size: 0.78rem;
+      line-height: 1.35;
+    }
+
+    .proof-actions {
+      display: flex;
+      gap: 8px;
+    }
+
+    .proof-actions .ghost {
+      width: 100%;
+      min-height: 34px;
+      font-size: 0.76rem;
+    }
+
+    .log {
+      display: grid;
+      align-content: start;
+      gap: 8px;
+      min-height: 0;
+      overflow: auto;
+      padding-right: 3px;
+    }
+
+    .log-entry {
+      display: grid;
+      grid-template-columns: 48px 1fr auto;
+      gap: 9px;
+      align-items: center;
+      padding: 8px;
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      background: rgba(255, 255, 255, 0.025);
+      font-size: 0.78rem;
+    }
+
+    .log-entry canvas {
+      width: 48px;
+      height: 36px;
+    }
+
+    .log-entry span {
+      min-width: 0;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+      color: var(--muted);
+    }
+
+    .log-entry strong {
+      color: var(--ink);
+      font-size: 0.72rem;
+    }
+
+    .research {
+      display: grid;
+      gap: 10px;
+      padding: 12px;
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      background: rgba(255, 255, 255, 0.025);
+      color: var(--muted);
+      font-size: 0.78rem;
+      line-height: 1.4;
+    }
+
+    .research strong {
+      color: var(--ink);
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      font-size: 0.68rem;
+    }
+
+    .research a {
+      color: var(--teal);
+      text-decoration: none;
+    }
+
+    .research a:hover {
+      text-decoration: underline;
+    }
+
+    .view-actions {
+      position: sticky;
+      bottom: -1px;
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 10px;
+      padding-top: 12px;
+      border-top: 1px solid var(--line);
+      background: linear-gradient(180deg, rgba(18, 18, 16, 0.72), rgba(18, 18, 16, 0.98) 30%);
+    }
+
+    .foot-actions {
+      display: grid;
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+      gap: 10px;
+    }
+
+    .guide-dialog,
+    .settings-dialog,
+    .view-dialog {
+      width: min(760px, calc(100vw - 28px));
+      max-height: min(760px, calc(100vh - 28px));
+      padding: 0;
+      overflow: hidden;
+      border: 1px solid var(--line-strong);
+      border-radius: 8px;
+      background: var(--panel-solid);
+      color: var(--ink);
+      box-shadow: 0 30px 90px rgba(0, 0, 0, 0.56);
+    }
+
+    .settings-dialog {
+      width: min(880px, calc(100vw - 28px));
+    }
+
+    .view-dialog {
+      width: min(820px, calc(100vw - 28px));
+    }
+
+    .guide-dialog::backdrop,
+    .settings-dialog::backdrop,
+    .view-dialog::backdrop {
+      background: rgba(10, 10, 9, 0.72);
+      backdrop-filter: blur(8px);
+    }
+
+    .guide-panel,
+    .settings-panel,
+    .view-panel {
+      display: grid;
+      grid-template-rows: auto minmax(0, 1fr) auto;
+      max-height: min(760px, calc(100vh - 28px));
+    }
+
+    .guide-head,
+    .guide-foot,
+    .settings-head,
+    .settings-foot,
+    .view-head,
+    .view-foot {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      padding: 16px;
+      border-bottom: 1px solid var(--line);
+    }
+
+    .guide-foot,
+    .settings-foot,
+    .view-foot {
+      border-top: 1px solid var(--line);
+      border-bottom: 0;
+    }
+
+    .guide-head h2,
+    .settings-head h2,
+    .view-head h2 {
+      margin: 0;
+      font-size: 1.45rem;
+      line-height: 1;
+      text-transform: uppercase;
+    }
+
+    .guide-body,
+    .settings-body,
+    .view-body {
+      display: grid;
+      gap: 14px;
+      overflow: auto;
+      padding: 16px;
+    }
+
+    .guide-section,
+    .settings-section,
+    .view-section {
+      display: grid;
+      gap: 10px;
+      padding-bottom: 14px;
+      border-bottom: 1px solid var(--line);
+    }
+
+    .guide-section:last-child,
+    .settings-section:last-child,
+    .view-section:last-child {
+      border-bottom: 0;
+      padding-bottom: 0;
+    }
+
+    .guide-section h3,
+    .settings-section h3,
+    .view-section h3 {
+      margin: 0;
+      color: var(--gold);
+      font-size: 0.78rem;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+    }
+
+    .guide-section p,
+    .settings-section p,
+    .view-section p {
+      margin: 0;
+      color: var(--muted);
+      line-height: 1.45;
+    }
+
+    .guide-list {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 10px;
+    }
+
+    .guide-list div {
+      display: grid;
+      gap: 5px;
+      min-width: 0;
+      padding: 10px;
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      background: rgba(255, 255, 255, 0.03);
+    }
+
+    .guide-list strong {
+      color: var(--ink);
+      font-size: 0.76rem;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+    }
+
+    .guide-list span {
+      color: var(--muted);
+      font-size: 0.85rem;
+      line-height: 1.35;
+    }
+
+    .preset-row {
+      display: grid;
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+      gap: 10px;
+    }
+
+    .preset-button {
+      display: grid;
+      gap: 5px;
+      min-height: 74px;
+      padding: 10px;
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      background: rgba(255, 255, 255, 0.035);
+      text-align: left;
+      cursor: pointer;
+    }
+
+    .preset-button strong {
+      font-size: 0.76rem;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+    }
+
+    .preset-button span {
+      color: var(--muted);
+      font-size: 0.78rem;
+      line-height: 1.3;
+    }
+
+    .preset-button[aria-pressed="true"] {
+      border-color: var(--gold);
+      background: rgba(244, 189, 75, 0.1);
+    }
+
+    .settings-grid {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 10px;
+    }
+
+    .control {
+      display: grid;
+      gap: 8px;
+      min-width: 0;
+      padding: 12px;
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      background: rgba(255, 255, 255, 0.03);
+    }
+
+    .control label {
+      display: flex;
+      justify-content: space-between;
+      gap: 10px;
+      color: var(--muted);
+      font-size: 0.72rem;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+    }
+
+    .control output {
+      color: var(--ink);
+      font-weight: 800;
+    }
+
+    .control small {
+      color: var(--muted);
+      line-height: 1.35;
+    }
+
+    .control select {
+      width: 100%;
+      min-height: 36px;
+      border: 1px solid var(--line-strong);
+      border-radius: 8px;
+      background: rgba(17, 17, 15, 0.94);
+      color: var(--ink);
+      padding: 0 10px;
+      font: inherit;
+    }
+
+    input[type="range"] {
+      width: 100%;
+      accent-color: var(--gold);
+    }
+
+    .toggle-grid {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 10px;
+    }
+
+    .toggle {
+      display: flex;
+      gap: 9px;
+      align-items: flex-start;
+      min-width: 0;
+      padding: 10px;
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      background: rgba(255, 255, 255, 0.03);
+      color: var(--muted);
+      font-size: 0.82rem;
+      line-height: 1.35;
+    }
+
+    .toggle input {
+      width: 18px;
+      height: 18px;
+      margin: 1px 0 0;
+      flex: 0 0 auto;
+      accent-color: var(--teal);
+    }
+
+    .toggle strong {
+      display: block;
+      color: var(--ink);
+      font-size: 0.74rem;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+    }
+
+    .strain-readout {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      padding: 12px;
+      border: 1px solid var(--line-strong);
+      border-radius: 8px;
+      background: rgba(85, 215, 199, 0.07);
+    }
+
+    .strain-readout span {
+      color: var(--muted);
+      font-size: 0.8rem;
+      line-height: 1.35;
+    }
+
+    .strain-readout strong {
+      color: var(--teal);
+      font-size: 1.4rem;
+      line-height: 1;
+    }
+
+    @media (max-width: 980px) {
+      html,
+      body {
+        height: auto;
+        min-height: 100%;
+        overflow-x: hidden;
+        overflow-y: auto;
+      }
+
+      body {
+        -webkit-overflow-scrolling: touch;
+      }
+
+      .app {
+        grid-template-columns: 1fr;
+        height: auto;
+        min-height: 100vh;
+      }
+
+      .arena {
+        min-height: 100vh;
+      }
+
+      .side {
+        border-width: 1px 0 0;
+        grid-template-rows: auto auto auto auto;
+        overflow: visible;
+        scrollbar-gutter: auto;
+      }
+
+      .view-actions {
+        position: static;
+        background: transparent;
+      }
+
+      .topbar {
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+      }
+
+      .brand {
+        grid-column: 1 / -1;
+      }
+    }
+
+    @media (max-width: 720px) {
+      .arena {
+        padding: 10px;
+      }
+
+      .topbar {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+      }
+
+      .answers {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+      }
+
+      .quick-guide,
+      .guide-list {
+        grid-template-columns: 1fr;
+      }
+
+      .answer {
+        min-height: 108px;
+      }
+
+      .answer canvas {
+        height: 70px;
+      }
+
+      .preset-row,
+      .settings-grid,
+      .toggle-grid {
+        grid-template-columns: 1fr;
+      }
+
+      #stage {
+        min-height: 330px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <main class="app">
+    <section class="arena" aria-label="Axiom Rift arena">
+      <header class="topbar">
+        <div class="brand">
+          <h1>Axiom Rift</h1>
+          <div class="sub"><span class="pulse-dot"></span><span id="phaseLabel">abstract adaptive gauntlet</span></div>
+        </div>
+        <div class="metric"><span>Score</span><strong id="score">0</strong></div>
+        <div class="metric"><span>Level</span><strong id="level">01</strong></div>
+        <div class="metric"><span>Streak</span><strong id="streak">0</strong></div>
+        <div class="metric"><span>Accuracy</span><strong id="accuracy">--</strong></div>
+        <div class="metric"><span>Best</span><strong id="best">0</strong></div>
+      </header>
+
+      <div class="stage-wrap">
+        <canvas id="stage"></canvas>
+        <div class="timer" aria-hidden="true"><div id="timerFill"></div></div>
+        <div class="veil" id="veil">
+          <div class="start-panel">
+            <h2>Hard Mode First</h2>
+            <p>Mixed working memory, interference, switching, change detection, rotation, and analogical transfer. Study-inspired, not a clinical claim.</p>
+            <div class="quick-guide" aria-label="quick instructions">
+              <span><strong>Read</strong>Use the chamber rule and prompt on the right.</span>
+              <span><strong>Bind</strong>Track color, shape, glyph, tone, rotation, and location.</span>
+              <span><strong>Strike</strong>Answer with click, tap, 1-4, or A-D before the timer drains.</span>
+            </div>
+            <div class="start-actions">
+              <button class="command" id="startBtn">Start Rift</button>
+              <button class="ghost" id="silentBtn">Silent Start</button>
+              <button class="ghost" id="settingsBtnStart">Customize</button>
+              <button class="ghost" id="guideBtnStart">Instructions</button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="answers" id="answers" aria-label="answer choices">
+        <button class="answer" data-index="0" disabled><canvas></canvas><b><span>1</span><em>A</em></b></button>
+        <button class="answer" data-index="1" disabled><canvas></canvas><b><span>2</span><em>B</em></b></button>
+        <button class="answer" data-index="2" disabled><canvas></canvas><b><span>3</span><em>C</em></b></button>
+        <button class="answer" data-index="3" disabled><canvas></canvas><b><span>4</span><em>D</em></b></button>
+      </div>
+    </section>
+
+    <aside class="side" aria-label="session panel">
+      <section class="cue-block">
+        <div class="cue-line"><span>Chamber</span><strong id="chamber">Dormant</strong></div>
+        <div class="cue-line"><span>Load</span><strong id="load">0</strong></div>
+        <div class="cue-line"><span>Profile</span><strong id="profile">Abyss / 00</strong></div>
+        <div class="adaptive-grid" id="adaptiveGrid" aria-label="adaptive matrix"></div>
+        <p class="adaptive-note" id="adaptiveNote">Adaptive matrix initializes from Tune settings.</p>
+        <div class="rule-card">
+          <div class="rule-orb" id="ruleGlyph">0</div>
+          <div class="rule-copy">
+            <h2 id="ruleTitle">Null Field</h2>
+            <p id="ruleText">The first fracture starts when the clock starts.</p>
+          </div>
+        </div>
+      </section>
+
+      <section class="logic-inspector" aria-label="logic inspector">
+        <div class="logic-head">
+          <h3>Logic Inspector</h3>
+          <span class="truth-lock" id="truthLock">No Trial</span>
+        </div>
+        <div class="logic-status" id="logicStatus">Dormant</div>
+        <p class="logic-rule" id="logicRule">Start a run to arm the proof engine.</p>
+        <div class="proof-pair">
+          <div class="proof-box"><span>Chosen</span><strong id="proofChosen">--</strong></div>
+          <div class="proof-box"><span>Correct</span><strong id="proofCorrect">--</strong></div>
+        </div>
+        <div class="chip-row" id="proofChips" aria-label="proof feature chips"></div>
+        <ol class="proof-lines" id="proofLines"></ol>
+        <div class="proof-actions">
+          <button class="ghost" id="replayProofBtn">Replay Proof</button>
+        </div>
+      </section>
+
+      <section class="log" id="log" aria-label="recent trials"></section>
+
+      <div class="view-actions">
+        <button class="command" id="viewBtn">View</button>
+      </div>
+    </aside>
+  </main>
+
+  <dialog class="view-dialog" id="viewDialog" aria-labelledby="viewTitle">
+    <div class="view-panel">
+      <header class="view-head">
+        <h2 id="viewTitle">View</h2>
+        <button class="ghost" id="closeViewBtn">Close</button>
+      </header>
+      <div class="view-body">
+        <section class="view-section">
+          <h3>Options</h3>
+          <div class="foot-actions">
+            <button class="ghost" id="settingsBtn">Tune</button>
+            <button class="ghost" id="guideBtn">Guide</button>
+            <button class="ghost" id="pauseBtn">Pause</button>
+            <button class="ghost" id="resetBtn">Reset</button>
+          </div>
+        </section>
+
+        <section class="view-section">
+          <h3>Study Roots</h3>
+          <div class="research">
+            <span>Dual n-back, Stroop interference, predictable task switching, visual change capacity, and mental rotation. Transfer is debated, so this remains a demanding cognitive game rather than a clinical or intelligence-improvement claim.</span>
+            <span>
+              <a href="https://www.pnas.org/doi/10.1073/pnas.0801268105" target="_blank" rel="noreferrer">Jaeggi 2008</a>,
+              <a href="https://psychclassics.yorku.ca/Stroop/" target="_blank" rel="noreferrer">Stroop 1935</a>,
+              <a href="https://doi.org/10.1037/0096-1523.21.1.207" target="_blank" rel="noreferrer">Rogers 1995</a>,
+              <a href="https://doi.org/10.1038/36846" target="_blank" rel="noreferrer">Luck 1997</a>,
+              <a href="https://doi.org/10.1126/science.171.3972.701" target="_blank" rel="noreferrer">Shepard 1971</a>
+            </span>
+          </div>
+        </section>
+
+        <section class="view-section">
+          <h3>Adaptive Engine</h3>
+          <p>The matrix learns from recent speed, misses, and chamber-specific weakness. It raises memory depth, visual density, source-map load, and time pressure when you stabilize, then targets weak domains when you fail.</p>
+        </section>
+      </div>
+      <footer class="view-foot">
+        <span>Live play stays on the main rail; references and controls live here.</span>
+        <button class="command" id="closeViewBtnFoot">Done</button>
+      </footer>
+    </div>
+  </dialog>
+
+  <dialog class="guide-dialog" id="guideDialog" aria-labelledby="guideTitle">
+    <div class="guide-panel">
+      <header class="guide-head">
+        <h2 id="guideTitle">Rift Guide</h2>
+        <button class="ghost" id="closeGuideBtn">Close</button>
+      </header>
+      <div class="guide-body">
+        <section class="guide-section">
+          <h3>Core Loop</h3>
+          <p>Every round shows an abstract puzzle in the arena and four possible answers below it. The right panel names the active chamber and the exact rule. Pick the answer that satisfies that rule before the timer bar empties.</p>
+          <p>Correct answers raise score and streak. Every third hit increases level. Misses lower level, so the app keeps drifting toward the edge of what you can still hold together.</p>
+        </section>
+        <section class="guide-section">
+          <h3>Controls</h3>
+          <div class="guide-list">
+            <div><strong>Answer</strong><span>Click or tap an answer. Keyboard: 1-4 or A-D.</span></div>
+            <div><strong>Pause</strong><span>Use the Pause button or press P.</span></div>
+            <div><strong>Sound</strong><span>Start Rift uses tones. Silent Start keeps the same game muted.</span></div>
+            <div><strong>Reset</strong><span>Reset returns to the launch state and clears the current run.</span></div>
+          </div>
+        </section>
+        <section class="guide-section">
+          <h3>Chambers</h3>
+          <div class="guide-list">
+            <div><strong>Echo Lattice</strong><span>N-back. Choose the object from N trials ago. The prompt names which features matter.</span></div>
+            <div><strong>Contradiction Forge</strong><span>Stroop. If the prompt says INK, obey color. If it says WORD, obey the written color name.</span></div>
+            <div><strong>Mirror Torsion</strong><span>Mental rotation. Choose the same object after rotation. Reflections are traps.</span></div>
+            <div><strong>Vanishing Array</strong><span>Change detection. Study the array, survive the mask, then choose the changed cell.</span></div>
+            <div><strong>Operator Dream</strong><span>Analogy. Infer the hidden A to B transform and apply it to C.</span></div>
+            <div><strong>Tensor Crucible</strong><span>Feature synthesis. Build one answer object from channels split across A, B, and C.</span></div>
+          </div>
+        </section>
+        <section class="guide-section">
+          <h3>Customization</h3>
+          <p>Use Tune to reshape the machine. Lower time scale, higher bind load, more noise, deeper memory, more objects, and harsher adaptation all raise strain. Chamber toggles let you build a focused nightmare or a full mixed gauntlet.</p>
+        </section>
+        <section class="guide-section">
+          <h3>Reading Objects</h3>
+          <p>Objects can differ by glyph text, outline shape, color, small orbit dots, ring count, rotation, and mirror direction. The hard part is not seeing them one by one; it is binding several at once while the current rule changes.</p>
+        </section>
+      </div>
+      <footer class="guide-foot">
+        <span>Training transfer is debated; treat this as a hard cognitive game.</span>
+        <button class="command" id="closeGuideBtnFoot">Ready</button>
+      </footer>
+    </div>
+  </dialog>
+
+  <dialog class="settings-dialog" id="settingsDialog" aria-labelledby="settingsTitle">
+    <div class="settings-panel">
+      <header class="settings-head">
+        <h2 id="settingsTitle">Rift Console</h2>
+        <button class="ghost" id="closeSettingsBtn">Close</button>
+      </header>
+      <div class="settings-body">
+        <section class="settings-section">
+          <h3>Presets</h3>
+          <div class="preset-row">
+            <button class="preset-button" data-preset="warm"><strong>Warm Knife</strong><span>Readable, still sharp.</span></button>
+            <button class="preset-button" data-preset="severe"><strong>Severe</strong><span>Fast, dense, adaptive.</span></button>
+            <button class="preset-button" data-preset="abyss"><strong>Abyss</strong><span>Default: cruel but fair.</span></button>
+            <button class="preset-button" data-preset="impossible"><strong>Impossible</strong><span>The machine stops being polite.</span></button>
+          </div>
+        </section>
+
+        <section class="settings-section">
+          <h3>Parameters</h3>
+          <div class="settings-grid">
+            <div class="control">
+              <label for="settingStartLevel"><span>Start Level</span><output id="settingStartLevelOut">07</output></label>
+              <input id="settingStartLevel" type="range" min="1" max="24" step="1">
+              <small>Sets the run's opening cognitive load.</small>
+            </div>
+            <div class="control">
+              <label for="settingTimeScale"><span>Time Scale</span><output id="settingTimeScaleOut">62%</output></label>
+              <input id="settingTimeScale" type="range" min="42" max="130" step="1">
+              <small>Lower values make the clock more aggressive.</small>
+            </div>
+            <div class="control">
+              <label for="settingBindLoad"><span>Bind Load</span><output id="settingBindLoadOut">3</output></label>
+              <input id="settingBindLoad" type="range" min="0" max="5" step="1">
+              <small>How many features each rule can force you to hold together.</small>
+            </div>
+            <div class="control">
+              <label for="settingVisualNoise"><span>Visual Noise</span><output id="settingVisualNoiseOut">70</output></label>
+              <input id="settingVisualNoise" type="range" min="0" max="100" step="1">
+              <small>Raises background interference and mask intensity.</small>
+            </div>
+            <div class="control">
+              <label for="settingMemoryBoost"><span>Memory Depth</span><output id="settingMemoryBoostOut">2</output></label>
+              <input id="settingMemoryBoost" type="range" min="0" max="4" step="1">
+              <small>Pushes Echo Lattice toward deeper N-back spans.</small>
+            </div>
+            <div class="control">
+              <label for="settingObjectBoost"><span>Array Density</span><output id="settingObjectBoostOut">3</output></label>
+              <input id="settingObjectBoost" type="range" min="0" max="7" step="1">
+              <small>Adds objects to change detection and spatial binding.</small>
+            </div>
+            <div class="control">
+              <label for="settingAdaptation"><span>Adaptive Cruelty</span><output id="settingAdaptationOut">3</output></label>
+              <input id="settingAdaptation" type="range" min="1" max="5" step="1">
+              <small>How quickly the level climbs after streaks and punishes misses.</small>
+            </div>
+            <div class="control">
+              <label for="settingDistractors"><span>Decoy Pressure</span><output id="settingDistractorsOut">2</output></label>
+              <input id="settingDistractors" type="range" min="0" max="4" step="1">
+              <small>Adds near-miss options and extra visual interference.</small>
+            </div>
+          </div>
+        </section>
+
+        <section class="settings-section">
+          <h3>Chambers</h3>
+          <div class="toggle-grid">
+            <label class="toggle"><input type="checkbox" data-chamber="nback"><span><strong>Echo</strong>N-back memory.</span></label>
+            <label class="toggle"><input type="checkbox" data-chamber="stroop"><span><strong>Contradiction</strong>Interference control.</span></label>
+            <label class="toggle"><input type="checkbox" data-chamber="rotate"><span><strong>Torsion</strong>Rotation and reflection.</span></label>
+            <label class="toggle"><input type="checkbox" data-chamber="change"><span><strong>Vanishing</strong>Change detection.</span></label>
+            <label class="toggle"><input type="checkbox" data-chamber="analogy"><span><strong>Operator</strong>Relational transfer.</span></label>
+            <label class="toggle"><input type="checkbox" data-chamber="synthesis"><span><strong>Tensor</strong>Novel synthesis chamber.</span></label>
+          </div>
+        </section>
+
+        <section class="settings-section">
+          <h3>Logic</h3>
+          <div class="settings-grid">
+            <div class="control">
+              <label for="settingProofPressure"><span>Proof Pressure</span><output id="settingProofPressureOut">Full</output></label>
+              <select id="settingProofPressure">
+                <option value="full">Full</option>
+                <option value="compact">Compact</option>
+                <option value="misses">Misses Only</option>
+              </select>
+              <small>Controls how much proof text appears after each response.</small>
+            </div>
+          </div>
+        </section>
+
+        <section class="settings-section">
+          <h3>Distortions</h3>
+          <div class="toggle-grid">
+            <label class="toggle"><input id="settingHiddenLabels" type="checkbox"><span><strong>Blind Labels</strong>Hide nonessential arena labels.</span></label>
+            <label class="toggle"><input id="settingCloseDecoys" type="checkbox"><span><strong>Close Decoys</strong>Force distractors to differ by fewer features.</span></label>
+            <label class="toggle"><input id="settingVolatileMix" type="checkbox"><span><strong>Volatile Mix</strong>Prefer rapid chamber switching.</span></label>
+          </div>
+        </section>
+
+        <section class="settings-section">
+          <h3>Strain</h3>
+          <div class="strain-readout">
+            <span id="settingsSummary">Abyss profile: high load, short time, dense binding.</span>
+            <strong id="settingsStrain">88</strong>
+          </div>
+        </section>
+      </div>
+      <footer class="settings-foot">
+        <button class="ghost" id="resetSettingsBtn">Reset Console</button>
+        <button class="command" id="applySettingsBtn">Apply</button>
+      </footer>
+    </div>
+  </dialog>
+
+  <script>
+    (() => {
+      "use strict";
+
+      const palette = [
+        { name: "TEAL", hex: "#55d7c7" },
+        { name: "ROSE", hex: "#ff6b7a" },
+        { name: "GOLD", hex: "#f4bd4b" },
+        { name: "GREEN", hex: "#95dd64" },
+        { name: "VIOLET", hex: "#b297ff" },
+        { name: "WHITE", hex: "#f3f0e8" }
+      ];
+
+      const glyphs = ["AX", "NO", "VE", "RU", "IX", "OM", "SA", "QF"];
+      const chambers = {
+        nback: {
+          name: "Echo Lattice",
+          root: "adaptive dual n-back",
+          glyph: "N",
+          copy: "Recover the older trace while the current one interferes."
+        },
+        stroop: {
+          name: "Contradiction Forge",
+          root: "interference control",
+          glyph: "S",
+          copy: "Select the signaled channel while the other channel lies."
+        },
+        rotate: {
+          name: "Mirror Torsion",
+          root: "mental rotation",
+          glyph: "R",
+          copy: "Find the same object through rotation, not reflection."
+        },
+        change: {
+          name: "Vanishing Array",
+          root: "visual working memory",
+          glyph: "D",
+          copy: "Bind several objects, survive the mask, isolate the mutation."
+        },
+        analogy: {
+          name: "Operator Dream",
+          root: "relational transfer",
+          glyph: "A",
+          copy: "Infer the hidden transform and apply it to the stranger."
+        },
+        synthesis: {
+          name: "Tensor Crucible",
+          root: "multi-feature synthesis",
+          glyph: "T",
+          copy: "Assemble one object from feature channels split across sources."
+        }
+      };
+
+      const featureLabels = {
+        glyph: "GLYPH",
+        color: "COLOR",
+        tone: "RINGS",
+        orbit: "ORBIT",
+        spin: "SPIN",
+        form: "FORM",
+        mirror: "MIRROR"
+      };
+      const featureCodes = {
+        glyph: "G",
+        color: "C",
+        tone: "R",
+        orbit: "O",
+        spin: "S",
+        form: "F",
+        mirror: "M"
+      };
+      const featurePool = ["glyph", "color", "tone", "orbit", "spin", "form", "mirror"];
+      const adaptiveAxes = ["memory", "interference", "spatial", "visual", "relational", "synthesis", "speed"];
+      const axisLabels = {
+        memory: "Memory",
+        interference: "Interference",
+        spatial: "Spatial",
+        visual: "Visual",
+        relational: "Relational",
+        synthesis: "Synthesis",
+        speed: "Speed"
+      };
+      const chamberAxisWeights = {
+        nback: { memory: 1, speed: 0.28 },
+        stroop: { interference: 1, speed: 0.55 },
+        rotate: { spatial: 1, speed: 0.25 },
+        change: { visual: 1, memory: 0.5 },
+        analogy: { relational: 1, memory: 0.25 },
+        synthesis: { synthesis: 1, memory: 0.35, relational: 0.25 }
+      };
+      const settingStorageKey = "axiom-rift-settings";
+      const levelMax = 24;
+      const defaultSettings = {
+        preset: "abyss",
+        startLevel: 7,
+        timeScale: 62,
+        bindLoad: 3,
+        visualNoise: 70,
+        memoryBoost: 2,
+        objectBoost: 3,
+        adaptation: 3,
+        distractors: 2,
+        hiddenLabels: false,
+        closeDecoys: true,
+        volatileMix: true,
+        proofPressure: "full",
+        activeChambers: {
+          nback: true,
+          stroop: true,
+          rotate: true,
+          change: true,
+          analogy: true,
+          synthesis: true
+        }
+      };
+      const presets = {
+        warm: {
+          ...defaultSettings,
+          preset: "warm",
+          startLevel: 2,
+          timeScale: 104,
+          bindLoad: 1,
+          visualNoise: 24,
+          memoryBoost: 0,
+          objectBoost: 0,
+          adaptation: 1,
+          distractors: 0,
+          hiddenLabels: false,
+          closeDecoys: false,
+          volatileMix: false,
+          proofPressure: "full"
+        },
+        severe: {
+          ...defaultSettings,
+          preset: "severe",
+          startLevel: 5,
+          timeScale: 78,
+          bindLoad: 2,
+          visualNoise: 48,
+          memoryBoost: 1,
+          objectBoost: 2,
+          adaptation: 2,
+          distractors: 1,
+          hiddenLabels: false,
+          closeDecoys: true,
+          volatileMix: true,
+          proofPressure: "full"
+        },
+        abyss: defaultSettings,
+        impossible: {
+          ...defaultSettings,
+          preset: "impossible",
+          startLevel: 12,
+          timeScale: 46,
+          bindLoad: 5,
+          visualNoise: 92,
+          memoryBoost: 4,
+          objectBoost: 6,
+          adaptation: 5,
+          distractors: 4,
+          hiddenLabels: true,
+          closeDecoys: true,
+          volatileMix: true,
+          proofPressure: "compact"
+        }
+      };
+
+      const dom = {
+        stage: document.getElementById("stage"),
+        timerFill: document.getElementById("timerFill"),
+        veil: document.getElementById("veil"),
+        startBtn: document.getElementById("startBtn"),
+        silentBtn: document.getElementById("silentBtn"),
+        settingsBtnStart: document.getElementById("settingsBtnStart"),
+        guideBtnStart: document.getElementById("guideBtnStart"),
+        viewBtn: document.getElementById("viewBtn"),
+        viewDialog: document.getElementById("viewDialog"),
+        closeViewBtn: document.getElementById("closeViewBtn"),
+        closeViewBtnFoot: document.getElementById("closeViewBtnFoot"),
+        settingsBtn: document.getElementById("settingsBtn"),
+        guideBtn: document.getElementById("guideBtn"),
+        guideDialog: document.getElementById("guideDialog"),
+        settingsDialog: document.getElementById("settingsDialog"),
+        closeGuideBtn: document.getElementById("closeGuideBtn"),
+        closeGuideBtnFoot: document.getElementById("closeGuideBtnFoot"),
+        closeSettingsBtn: document.getElementById("closeSettingsBtn"),
+        applySettingsBtn: document.getElementById("applySettingsBtn"),
+        resetSettingsBtn: document.getElementById("resetSettingsBtn"),
+        presetButtons: Array.from(document.querySelectorAll("[data-preset]")),
+        chamberInputs: Array.from(document.querySelectorAll("[data-chamber]")),
+        settingsSummary: document.getElementById("settingsSummary"),
+        settingsStrain: document.getElementById("settingsStrain"),
+        settingInputs: {
+          startLevel: document.getElementById("settingStartLevel"),
+          timeScale: document.getElementById("settingTimeScale"),
+          bindLoad: document.getElementById("settingBindLoad"),
+          visualNoise: document.getElementById("settingVisualNoise"),
+          memoryBoost: document.getElementById("settingMemoryBoost"),
+          objectBoost: document.getElementById("settingObjectBoost"),
+          adaptation: document.getElementById("settingAdaptation"),
+          distractors: document.getElementById("settingDistractors")
+        },
+        settingOutputs: {
+          startLevel: document.getElementById("settingStartLevelOut"),
+          timeScale: document.getElementById("settingTimeScaleOut"),
+          bindLoad: document.getElementById("settingBindLoadOut"),
+          visualNoise: document.getElementById("settingVisualNoiseOut"),
+          memoryBoost: document.getElementById("settingMemoryBoostOut"),
+          objectBoost: document.getElementById("settingObjectBoostOut"),
+          adaptation: document.getElementById("settingAdaptationOut"),
+          distractors: document.getElementById("settingDistractorsOut")
+        },
+        settingHiddenLabels: document.getElementById("settingHiddenLabels"),
+        settingCloseDecoys: document.getElementById("settingCloseDecoys"),
+        settingVolatileMix: document.getElementById("settingVolatileMix"),
+        settingProofPressure: document.getElementById("settingProofPressure"),
+        settingProofPressureOut: document.getElementById("settingProofPressureOut"),
+        answers: Array.from(document.querySelectorAll(".answer")),
+        score: document.getElementById("score"),
+        level: document.getElementById("level"),
+        streak: document.getElementById("streak"),
+        accuracy: document.getElementById("accuracy"),
+        best: document.getElementById("best"),
+        chamber: document.getElementById("chamber"),
+        load: document.getElementById("load"),
+        profile: document.getElementById("profile"),
+        adaptiveGrid: document.getElementById("adaptiveGrid"),
+        adaptiveNote: document.getElementById("adaptiveNote"),
+        ruleGlyph: document.getElementById("ruleGlyph"),
+        ruleTitle: document.getElementById("ruleTitle"),
+        ruleText: document.getElementById("ruleText"),
+        phaseLabel: document.getElementById("phaseLabel"),
+        truthLock: document.getElementById("truthLock"),
+        logicStatus: document.getElementById("logicStatus"),
+        logicRule: document.getElementById("logicRule"),
+        proofChosen: document.getElementById("proofChosen"),
+        proofCorrect: document.getElementById("proofCorrect"),
+        proofChips: document.getElementById("proofChips"),
+        proofLines: document.getElementById("proofLines"),
+        replayProofBtn: document.getElementById("replayProofBtn"),
+        log: document.getElementById("log"),
+        pauseBtn: document.getElementById("pauseBtn"),
+        resetBtn: document.getElementById("resetBtn")
+      };
+
+      const ctx = dom.stage.getContext("2d");
+      const state = {
+        running: false,
+        paused: false,
+        muted: false,
+        score: 0,
+        best: Number(localStorage.getItem("axiom-rift-best") || 0),
+        level: 1,
+        streak: 0,
+        total: 0,
+        correct: 0,
+        misses: 0,
+        startedAt: 0,
+        trialStarted: 0,
+        phaseUntil: 0,
+        pausedAt: 0,
+        feedbackUntil: 0,
+        lastWasCorrect: null,
+        trial: null,
+        history: [],
+        audio: null,
+        raf: 0,
+        dpr: 1,
+        pauseOwner: "",
+        recentChambers: [],
+        lastProof: null,
+        adaptive: {},
+        weakness: {},
+        recentPerformance: [],
+        chamberStats: {},
+        lastMissType: "",
+        settings: JSON.parse(JSON.stringify(defaultSettings))
+      };
+
+      function clamp(value, min, max) {
+        return Math.min(max, Math.max(min, value));
+      }
+
+      function rand(min, max) {
+        return min + Math.random() * (max - min);
+      }
+
+      function int(min, max) {
+        return Math.floor(rand(min, max + 1));
+      }
+
+      function pick(list) {
+        return list[Math.floor(Math.random() * list.length)];
+      }
+
+      function shuffle(list) {
+        const copy = list.slice();
+        for (let i = copy.length - 1; i > 0; i -= 1) {
+          const j = Math.floor(Math.random() * (i + 1));
+          [copy[i], copy[j]] = [copy[j], copy[i]];
+        }
+        return copy;
+      }
+
+      function cloneSettings(settings) {
+        return JSON.parse(JSON.stringify(settings));
+      }
+
+      function normalizeSettings(raw = {}) {
+        const merged = {
+          ...cloneSettings(defaultSettings),
+          ...raw,
+          activeChambers: {
+            ...defaultSettings.activeChambers,
+            ...(raw.activeChambers || {})
+          }
+        };
+        merged.startLevel = clamp(Number(merged.startLevel) || defaultSettings.startLevel, 1, levelMax);
+        merged.timeScale = clamp(Number(merged.timeScale) || defaultSettings.timeScale, 42, 130);
+        merged.bindLoad = clamp(Number(merged.bindLoad) || 0, 0, 5);
+        merged.visualNoise = clamp(Number(merged.visualNoise) || 0, 0, 100);
+        merged.memoryBoost = clamp(Number(merged.memoryBoost) || 0, 0, 4);
+        merged.objectBoost = clamp(Number(merged.objectBoost) || 0, 0, 7);
+        merged.adaptation = clamp(Number(merged.adaptation) || 1, 1, 5);
+        merged.distractors = clamp(Number(merged.distractors) || 0, 0, 4);
+        merged.hiddenLabels = Boolean(merged.hiddenLabels);
+        merged.closeDecoys = Boolean(merged.closeDecoys);
+        merged.volatileMix = Boolean(merged.volatileMix);
+        if (!["full", "compact", "misses"].includes(merged.proofPressure)) merged.proofPressure = "full";
+        if (!Object.values(merged.activeChambers).some(Boolean)) {
+          merged.activeChambers.synthesis = true;
+        }
+        return merged;
+      }
+
+      function loadSettings() {
+        try {
+          return normalizeSettings(JSON.parse(localStorage.getItem(settingStorageKey) || "{}"));
+        } catch (error) {
+          return normalizeSettings(defaultSettings);
+        }
+      }
+
+      function saveSettings() {
+        localStorage.setItem(settingStorageKey, JSON.stringify(state.settings));
+      }
+
+      function strainScore(settings = state.settings) {
+        const chamberCount = Object.values(settings.activeChambers).filter(Boolean).length;
+        const score = settings.startLevel * 2.4
+          + (132 - settings.timeScale) * 0.62
+          + settings.bindLoad * 7.6
+          + settings.visualNoise * 0.22
+          + settings.memoryBoost * 8.4
+          + settings.objectBoost * 3.8
+          + settings.adaptation * 5.2
+          + settings.distractors * 5.6
+          + chamberCount * 1.8
+          + (settings.hiddenLabels ? 7 : 0)
+          + (settings.closeDecoys ? 4 : 0)
+          + (settings.volatileMix ? 4 : 0);
+        return clamp(Math.round(score), 1, 99);
+      }
+
+      function presetName(settings = state.settings) {
+        const names = {
+          warm: "Warm",
+          severe: "Severe",
+          abyss: "Abyss",
+          impossible: "Impossible",
+          custom: "Custom"
+        };
+        return names[settings.preset] || "Custom";
+      }
+
+      function comparableSettings(settings) {
+        const copy = cloneSettings(normalizeSettings(settings));
+        delete copy.preset;
+        return JSON.stringify(copy);
+      }
+
+      function matchingPreset(settings) {
+        const signature = comparableSettings(settings);
+        return Object.keys(presets).find((name) => comparableSettings(presets[name]) === signature) || "custom";
+      }
+
+      function activeChambers(settings = state.settings) {
+        return Object.entries(settings.activeChambers)
+          .filter(([, enabled]) => enabled)
+          .map(([name]) => name);
+      }
+
+      function initialAdaptive() {
+        const base = clamp(state.settings.startLevel * 3 + state.settings.bindLoad * 7 + state.settings.distractors * 5, 12, 82);
+        return Object.fromEntries(adaptiveAxes.map((axis) => [axis, base]));
+      }
+
+      function adaptiveAverage(axes = adaptiveAxes) {
+        if (!state.adaptive || !Object.keys(state.adaptive).length) return 0;
+        return axes.reduce((sum, axis) => sum + axisPressure(axis), 0) / axes.length;
+      }
+
+      function axisPressure(axis) {
+        return clamp((state.adaptive?.[axis] || 0) + (state.weakness?.[axis] || 0) * 0.65, 0, 100);
+      }
+
+      function trialAxes(type) {
+        return Object.keys(chamberAxisWeights[type] || {});
+      }
+
+      function updateAdaptiveReadout() {
+        if (!dom.adaptiveGrid) return;
+        dom.adaptiveGrid.replaceChildren();
+        const ranked = adaptiveAxes
+          .map((axis) => ({ axis, value: Math.round(axisPressure(axis)), weakness: Math.round(state.weakness?.[axis] || 0) }))
+          .sort((a, b) => b.value - a.value);
+        adaptiveAxes.forEach((axis) => {
+          const value = Math.round(axisPressure(axis));
+          const item = document.createElement("div");
+          item.className = "adapt-axis";
+          item.title = `${axisLabels[axis]} pressure ${value}`;
+          const label = document.createElement("span");
+          const name = document.createElement("b");
+          name.textContent = axis.slice(0, 3);
+          name.title = axisLabels[axis];
+          const number = document.createElement("em");
+          number.textContent = String(value).padStart(2, "0");
+          const bar = document.createElement("div");
+          bar.className = "adapt-bar";
+          const fill = document.createElement("div");
+          fill.style.setProperty("--axis-value", `${value}%`);
+          label.append(name, number);
+          bar.append(fill);
+          item.append(label, bar);
+          dom.adaptiveGrid.append(item);
+        });
+        if (dom.adaptiveNote && ranked.length) {
+          const hot = ranked[0];
+          const weak = ranked.slice().sort((a, b) => b.weakness - a.weakness)[0];
+          const recent = state.recentPerformance.slice(-8);
+          const recentAccuracy = recent.length
+            ? Math.round((recent.filter((entry) => entry.correct).length / recent.length) * 100)
+            : null;
+          const hotNode = document.createElement("strong");
+          hotNode.textContent = axisLabels[hot.axis];
+          const weakNode = document.createElement("strong");
+          weakNode.textContent = axisLabels[weak.axis];
+          const accuracyText = recentAccuracy === null
+            ? "calibrating from Tune settings"
+            : `${recentAccuracy}% over the last ${recent.length}`;
+          dom.adaptiveNote.replaceChildren(
+            "Targeting ",
+            hotNode,
+            " pressure; weakest trace ",
+            weakNode,
+            `. Recent accuracy: ${accuracyText}.`
+          );
+        }
+      }
+
+      function resetAdaptiveModel() {
+        state.adaptive = initialAdaptive();
+        state.weakness = Object.fromEntries(adaptiveAxes.map((axis) => [axis, 0]));
+        state.recentPerformance = [];
+        state.chamberStats = {};
+        state.lastMissType = "";
+        updateAdaptiveReadout();
+      }
+
+      function recentAxisWindow(axis) {
+        const relevant = state.recentPerformance.filter((entry) => entry.axes.includes(axis)).slice(-12);
+        if (!relevant.length) return { attempts: 0, accuracy: 1, avgSpeed: 0.5, timeoutRate: 0 };
+        const correct = relevant.filter((entry) => entry.correct).length;
+        const timeouts = relevant.filter((entry) => entry.timedOut).length;
+        return {
+          attempts: relevant.length,
+          accuracy: correct / relevant.length,
+          avgSpeed: relevant.reduce((sum, entry) => sum + entry.speed, 0) / relevant.length,
+          timeoutRate: timeouts / relevant.length
+        };
+      }
+
+      function updateAdaptiveModel(trial, isCorrect, elapsed, timedOut = false) {
+        const weights = chamberAxisWeights[trial.type] || {};
+        const speed = clamp(1 - elapsed / trial.timeLimit, 0, 1);
+        const axes = Object.keys(weights);
+        state.recentPerformance.push({ type: trial.type, axes, correct: isCorrect, speed, timedOut });
+        if (state.recentPerformance.length > 36) state.recentPerformance.shift();
+        Object.entries(weights).forEach(([axis, weight]) => {
+          const recent = recentAxisWindow(axis);
+          const masteryBonus = recent.accuracy > 0.72 && recent.avgSpeed > 0.42 ? 1.35 : 1;
+          const weaknessGain = timedOut ? 12 : 8 + state.settings.adaptation;
+          const successGain = 2.5 + speed * 5.5 + state.streak * 0.18 + state.settings.adaptation * 0.65;
+          const missDrop = timedOut ? 2.4 : 1.4 + state.settings.adaptation * 0.22;
+          const delta = (isCorrect ? successGain * masteryBonus : -missDrop) * weight;
+          state.adaptive[axis] = clamp((state.adaptive[axis] || 0) + delta, 4, 100);
+          state.weakness[axis] = clamp((state.weakness[axis] || 0) + (isCorrect ? -5.5 : weaknessGain * weight), 0, 100);
+        });
+        state.adaptive.speed = clamp((state.adaptive.speed || 0) + (isCorrect ? (speed - 0.35) * 5 : -4), 4, 100);
+        state.weakness.speed = clamp((state.weakness.speed || 0) + (isCorrect ? -4 : timedOut ? 14 : 5), 0, 100);
+        const stats = state.chamberStats[trial.type] || { seen: 0, correct: 0, avgSpeed: 0 };
+        stats.seen += 1;
+        stats.correct += isCorrect ? 1 : 0;
+        stats.avgSpeed = stats.avgSpeed ? stats.avgSpeed * 0.72 + speed * 0.28 : speed;
+        state.chamberStats[trial.type] = stats;
+        state.lastMissType = isCorrect ? "" : trial.type;
+        updateAdaptiveReadout();
+      }
+
+      function updateProfile() {
+        const strain = strainScore();
+        dom.profile.textContent = `${presetName()} / ${String(strain).padStart(2, "0")}`;
+        if (dom.settingsStrain) dom.settingsStrain.textContent = String(strain);
+        if (dom.settingsSummary) {
+          const active = activeChambers().map((name) => chambers[name].glyph).join("");
+          dom.settingsSummary.textContent = `${presetName()} profile: ${active || "T"} chambers, ${state.settings.timeScale}% time, bind ${state.settings.bindLoad}, noise ${state.settings.visualNoise}.`;
+        }
+        dom.presetButtons.forEach((button) => {
+          button.setAttribute("aria-pressed", button.dataset.preset === state.settings.preset ? "true" : "false");
+        });
+        updateAdaptiveReadout();
+      }
+
+      function syncSettingsControls() {
+        Object.entries(dom.settingInputs).forEach(([key, input]) => {
+          input.value = state.settings[key];
+        });
+        dom.chamberInputs.forEach((input) => {
+          input.checked = Boolean(state.settings.activeChambers[input.dataset.chamber]);
+        });
+        dom.settingHiddenLabels.checked = state.settings.hiddenLabels;
+        dom.settingCloseDecoys.checked = state.settings.closeDecoys;
+        dom.settingVolatileMix.checked = state.settings.volatileMix;
+        dom.settingProofPressure.value = state.settings.proofPressure;
+        updateSettingOutputs();
+        updateProfile();
+      }
+
+      function updateSettingOutputs() {
+        Object.entries(dom.settingOutputs).forEach(([key, output]) => {
+          const value = Number(dom.settingInputs[key].value);
+          output.textContent = key === "timeScale" ? `${value}%` : String(value).padStart(key === "startLevel" ? 2 : 1, "0");
+        });
+        const proofLabels = { full: "Full", compact: "Compact", misses: "Misses Only" };
+        dom.settingProofPressureOut.textContent = proofLabels[dom.settingProofPressure.value] || "Full";
+      }
+
+      function readSettingsControls() {
+        const next = cloneSettings(state.settings);
+        Object.entries(dom.settingInputs).forEach(([key, input]) => {
+          next[key] = Number(input.value);
+        });
+        next.activeChambers = { ...next.activeChambers };
+        dom.chamberInputs.forEach((input) => {
+          next.activeChambers[input.dataset.chamber] = input.checked;
+        });
+        next.hiddenLabels = dom.settingHiddenLabels.checked;
+        next.closeDecoys = dom.settingCloseDecoys.checked;
+        next.volatileMix = dom.settingVolatileMix.checked;
+        next.proofPressure = dom.settingProofPressure.value;
+        next.preset = matchingPreset(next);
+        state.settings = normalizeSettings(next);
+        syncSettingsControls();
+        saveSettings();
+      }
+
+      function previewSettingsControls() {
+        updateSettingOutputs();
+        const preview = normalizeSettings({
+          ...state.settings,
+          preset: "custom",
+          ...Object.fromEntries(Object.entries(dom.settingInputs).map(([key, field]) => [key, Number(field.value)])),
+          activeChambers: Object.fromEntries(dom.chamberInputs.map((field) => [field.dataset.chamber, field.checked])),
+          hiddenLabels: dom.settingHiddenLabels.checked,
+          closeDecoys: dom.settingCloseDecoys.checked,
+          volatileMix: dom.settingVolatileMix.checked,
+          proofPressure: dom.settingProofPressure.value
+        });
+        dom.settingsStrain.textContent = String(strainScore(preview));
+        dom.settingsSummary.textContent = `Custom preview: ${activeChambers(preview).map((name) => chambers[name].glyph).join("") || "T"} chambers, ${preview.timeScale}% time, bind ${preview.bindLoad}, noise ${preview.visualNoise}.`;
+        dom.presetButtons.forEach((presetButton) => presetButton.setAttribute("aria-pressed", "false"));
+      }
+
+      function cssVar(name) {
+        return getComputedStyle(document.documentElement).getPropertyValue(name).trim();
+      }
+
+      function resizeCanvas(canvas, width, height) {
+        const ratio = window.devicePixelRatio || 1;
+        canvas.width = Math.max(1, Math.floor(width * ratio));
+        canvas.height = Math.max(1, Math.floor(height * ratio));
+        canvas.style.width = `${width}px`;
+        canvas.style.height = `${height}px`;
+        const c = canvas.getContext("2d");
+        c.setTransform(ratio, 0, 0, ratio, 0, 0);
+        return c;
+      }
+
+      function fitStage() {
+        const box = dom.stage.getBoundingClientRect();
+        state.dpr = window.devicePixelRatio || 1;
+        dom.stage.width = Math.max(1, Math.floor(box.width * state.dpr));
+        dom.stage.height = Math.max(1, Math.floor(box.height * state.dpr));
+        ctx.setTransform(state.dpr, 0, 0, state.dpr, 0, 0);
+        drawAnswers();
+      }
+
+      function newStim(overrides = {}) {
+        return {
+          glyph: pick(glyphs),
+          color: int(0, palette.length - 2),
+          tone: int(0, 4),
+          orbit: int(0, 5),
+          spin: int(0, 3),
+          form: int(0, 5),
+          mirror: Math.random() < 0.5,
+          ...overrides
+        };
+      }
+
+      function stimKey(stim) {
+        return [stim.glyph, stim.color, stim.tone, stim.orbit, stim.spin, stim.form, stim.mirror ? 1 : 0].join(":");
+      }
+
+      function equalStim(a, b) {
+        return stimKey(a) === stimKey(b);
+      }
+
+      function mutateStim(stim, locked = []) {
+        const copy = { ...stim };
+        const fields = shuffle(["glyph", "color", "tone", "orbit", "spin", "form", "mirror"]).filter((field) => !locked.includes(field));
+        changeField(copy, fields[0], stim);
+        return copy;
+      }
+
+      function changeField(copy, field, reference = copy) {
+        if (field === "glyph") {
+          do copy.glyph = pick(glyphs); while (copy.glyph === reference.glyph);
+        } else if (field === "mirror") {
+          copy.mirror = !copy.mirror;
+        } else {
+          const max = field === "color" ? palette.length - 2 : field === "tone" ? 4 : field === "form" ? 5 : 5;
+          do copy[field] = int(0, max); while (copy[field] === reference[field]);
+        }
+        return copy;
+      }
+
+      function featureValue(feature, stim) {
+        const shapeNames = ["tri", "quad", "pent", "hex", "hept", "oct"];
+        if (feature === "glyph") return stim.glyph;
+        if (feature === "color") return palette[stim.color % palette.length].name;
+        if (feature === "tone") return `${stim.tone + 1} rings`;
+        if (feature === "orbit") return `orbit ${stim.orbit + 1}`;
+        if (feature === "spin") return `${(stim.spin % 4) * 90} deg`;
+        if (feature === "form") return shapeNames[stim.form % shapeNames.length];
+        if (feature === "mirror") return stim.mirror ? "mirrored" : "normal";
+        return String(stim[feature]);
+      }
+
+      function featureChipLabel(feature, stimOrValue) {
+        const value = typeof stimOrValue === "object" ? featureValue(feature, stimOrValue) : String(stimOrValue);
+        return { key: featureCodes[feature] || feature.slice(0, 1).toUpperCase(), value };
+      }
+
+      function describeStim(stim, dims = featurePool) {
+        if (!stim) return "--";
+        return dims.map((feature) => `${featureCodes[feature]} ${featureValue(feature, stim)}`).join(" | ");
+      }
+
+      function diffStim(before, after, dims = featurePool) {
+        return dims
+          .filter((feature) => before && after && before[feature] !== after[feature])
+          .map((feature) => ({
+            feature,
+            before: featureValue(feature, before),
+            after: featureValue(feature, after)
+          }));
+      }
+
+      function optionKey(trial, option) {
+        if (trial.type === "stroop") return `stroop:${option.colorIndex}`;
+        if (trial.type === "change") return `cell:${option.id}`;
+        return stimKey(option);
+      }
+
+      function summarizeOption(trial, option) {
+        if (!option) return "--";
+        if (trial.type === "stroop") return `${palette[option.colorIndex].name} swatch`;
+        if (trial.type === "change") return `Cell ${option.id + 1}: ${describeStim(option.stim, ["glyph", "color", "form", "tone"])}`;
+        return describeStim(option, ["glyph", "color", "form", "tone", "spin", "mirror"]);
+      }
+
+      function solutionMatchesOption(trial, option) {
+        if (!option) return false;
+        if (trial.type === "nback") return trial.dims.every((feature) => option[feature] === trial.target[feature]);
+        if (trial.type === "stroop") return option.colorIndex === trial.correctColorIndex;
+        if (trial.type === "rotate") return equalStim(option, trial.correct);
+        if (trial.type === "change") return option.id === trial.changedIndex;
+        if (trial.type === "analogy") return equalStim(option, trial.correct);
+        if (trial.type === "synthesis") return equalStim(option, trial.correct);
+        return false;
+      }
+
+      function assertUniqueOptions(trial) {
+        if (!trial || !Array.isArray(trial.options) || trial.options.length !== 4) return false;
+        const unique = new Set(trial.options.map((option) => optionKey(trial, option)));
+        const matches = trial.options.filter((option) => solutionMatchesOption(trial, option));
+        return unique.size === 4 && matches.length === 1;
+      }
+
+      function trialChips(trial) {
+        if (!trial) return [];
+        if (trial.type === "nback") return trial.dims.map((feature) => featureChipLabel(feature, trial.target));
+        if (trial.type === "stroop") {
+          const channel = trial.channel === "INK" ? "Ink color" : "Printed word";
+          return [
+            { key: "RULE", value: channel },
+            { key: "ANS", value: palette[trial.correctColorIndex].name }
+          ];
+        }
+        if (trial.type === "rotate") {
+          return [
+            { key: "ROT", value: `${trial.correct.spin * 90} deg` },
+            { key: "REF", value: "reject mirror" },
+            ...["glyph", "color", "form"].map((feature) => featureChipLabel(feature, trial.correct))
+          ];
+        }
+        if (trial.type === "change") {
+          return [
+            { key: "CELL", value: String(trial.changedIndex + 1) },
+            ...trial.changedDiff.map((item) => ({ key: featureCodes[item.feature], value: `${item.before}->${item.after}` }))
+          ];
+        }
+        if (trial.type === "analogy") {
+          return trial.activeOps.map((feature) => ({ key: featureCodes[feature], value: transformText(feature, trial.op[feature]) }));
+        }
+        if (trial.type === "synthesis") {
+          return trial.dims.map((feature) => ({ key: featureCodes[feature], value: "ABC"[trial.mapping[feature]] }));
+        }
+        return [];
+      }
+
+      function transformText(feature, value) {
+        if (feature === "mirror") return value ? "flip" : "same";
+        if (!value) return "same";
+        if (feature === "spin") return `+${value * 90} deg`;
+        if (feature === "glyph") return `+${value} glyph`;
+        if (feature === "color") return `+${value} color`;
+        if (feature === "form") return `+${value} form`;
+        if (feature === "tone") return `+${value} ring`;
+        return String(value);
+      }
+
+      function buildSolution(trial) {
+        const optionSummaries = trial.options.map((option) => summarizeOption(trial, option));
+        const correctIndex = trial.options.findIndex((option) => solutionMatchesOption(trial, option));
+        const correctSummary = optionSummaries[correctIndex] || "--";
+        let rule = trial.chamber.copy;
+        let proofLines = [];
+
+        if (trial.type === "nback") {
+          const dims = trial.dims.map((dim) => featureLabels[dim]).join(", ");
+          rule = `Predicate P(x): x matches the N-${trial.n} trace on ${dims}.`;
+          proofLines = [
+            `The target is the object from ${trial.n} trial${trial.n === 1 ? "" : "s"} ago.`,
+            `Relevant dimensions: ${dims}.`,
+            `Correct option matches: ${describeStim(trial.target, trial.dims)}.`
+          ];
+        } else if (trial.type === "stroop") {
+          const word = palette[trial.wordIndex].name;
+          const ink = palette[trial.inkIndex].name;
+          rule = trial.channel === "INK" ? "Predicate P(x): x is the ink color, ignoring the word." : "Predicate P(x): x is the printed word, ignoring the ink.";
+          proofLines = [
+            `Printed word: ${word}. Ink color: ${ink}.`,
+            `${trial.channel} was cued, so the answer is ${palette[trial.correctColorIndex].name}.`
+          ];
+        } else if (trial.type === "rotate") {
+          rule = "Predicate P(x): x is the source after rotation with no reflection.";
+          proofLines = [
+            `The source rotates ${trial.correct.spin * 90} degrees.`,
+            `The correct option preserves glyph, color, rings, form, and mirror state.`,
+            "Mirrored decoys fail even if their rotation looks close."
+          ];
+        } else if (trial.type === "change") {
+          const changed = trial.changedDiff.map((item) => `${featureLabels[item.feature]} ${item.before} -> ${item.after}`).join(", ");
+          rule = "Predicate P(x): x is the cell whose bound object changed after the mask.";
+          proofLines = [
+            `Cell ${trial.changedIndex + 1} changed.`,
+            changed ? `Mutation: ${changed}.` : "Mutation detected by the stored feature binding.",
+            "Other listed cells preserve their original binding."
+          ];
+        } else if (trial.type === "analogy") {
+          const transforms = trial.activeOps.map((feature) => `${featureLabels[feature]} ${transformText(feature, trial.op[feature])}`).join(", ");
+          rule = "Predicate P(x): x equals C after the inferred A to B transform.";
+          proofLines = [
+            `A -> B transform: ${transforms}.`,
+            `Apply that transform to C to get ${describeStim(trial.correct, ["glyph", "color", "form", "tone", "spin", "mirror"])}.`,
+            "Options that apply only part of the transform are decoys."
+          ];
+        } else if (trial.type === "synthesis") {
+          const mapText = trial.dims.map((feature) => `${featureLabels[feature]} from ${"ABC"[trial.mapping[feature]]}`).join(", ");
+          rule = "Predicate P(x): every listed feature comes from its assigned A/B/C source.";
+          proofLines = [
+            `Source map: ${mapText}.`,
+            `Correct synthesis: ${describeStim(trial.correct, trial.dims)}.`,
+            "Each listed feature must come from its assigned source."
+          ];
+        }
+
+        return {
+          correctIndex,
+          correctSummary,
+          optionSummaries,
+          proofLines,
+          rule,
+          chips: trialChips(trial)
+        };
+      }
+
+      function explainFailure(trial, chosenIndex) {
+        const chosen = trial.options[chosenIndex];
+        if (!chosen) return "No chosen option was available to test.";
+        if (trial.type === "nback") {
+          const misses = diffStim(chosen, trial.target, trial.dims);
+          return misses.length
+            ? `Predicate failed on ${misses.map((item) => `${featureLabels[item.feature]} ${item.before} vs ${item.after}`).join(", ")}.`
+            : "Predicate failed outside the visible summary; the stored trace does not uniquely match.";
+        }
+        if (trial.type === "stroop") {
+          return `Chosen ${palette[chosen.colorIndex].name}; rule demanded ${palette[trial.correctColorIndex].name}.`;
+        }
+        if (trial.type === "rotate") {
+          const misses = diffStim(chosen, trial.correct, ["glyph", "color", "tone", "form", "spin", "mirror"]);
+          return misses.length ? `Rotation predicate failed on ${misses.map((item) => featureLabels[item.feature]).join(", ")}.` : "Chosen object did not satisfy the rotation predicate.";
+        }
+        if (trial.type === "change") {
+          return `Chosen cell ${chosen.id + 1}; changed cell was ${trial.changedIndex + 1}.`;
+        }
+        if (trial.type === "analogy") {
+          const misses = diffStim(chosen, trial.correct, featurePool);
+          return misses.length ? `Transform mismatch: ${misses.map((item) => featureLabels[item.feature]).join(", ")}.` : "Chosen object did not apply the full A to B transform.";
+        }
+        if (trial.type === "synthesis") {
+          const misses = diffStim(chosen, trial.correct, trial.dims);
+          return misses.length ? `Source-map mismatch: ${misses.map((item) => featureLabels[item.feature]).join(", ")}.` : "Chosen object did not satisfy every source assignment.";
+        }
+        return "Chosen option did not satisfy the active predicate.";
+      }
+
+      function setTrialSolution(trial) {
+        if (!assertUniqueOptions(trial)) return false;
+        const solution = buildSolution(trial);
+        if (solution.correctIndex < 0) return false;
+        trial.correctIndex = solution.correctIndex;
+        trial.solution = solution;
+        return true;
+      }
+
+      function difficulty() {
+        const level = state.level;
+        const settings = state.settings;
+        const timePressure = settings.timeScale / 100;
+        const featureLoad = settings.bindLoad + Math.floor(level / 7);
+        const adaptiveLoad = adaptiveAverage() / 100;
+        const memoryLoad = axisPressure("memory") / 100;
+        const speedLoad = axisPressure("speed") / 100;
+        const visualLoad = axisPressure("visual") / 100;
+        const synthesisLoad = axisPressure("synthesis") / 100;
+        const relationalLoad = axisPressure("relational") / 100;
+        return {
+          n: clamp(1 + Math.floor(level / 3) + settings.memoryBoost + Math.floor(settings.bindLoad / 3) + Math.floor(memoryLoad * 4), 1, 12),
+          time: clamp((7600 - level * 430 - settings.bindLoad * 285 - settings.distractors * 190 - speedLoad * 1420 - adaptiveLoad * 920) * timePressure, 720, 9800),
+          reveal: clamp((1240 - level * 68 - settings.objectBoost * 54 - settings.bindLoad * 32 - visualLoad * 300) * clamp(timePressure, 0.58, 1.2), 170, 1420),
+          objects: clamp(4 + Math.floor(level / 2) + settings.objectBoost + Math.floor(visualLoad * 5), 4, 22),
+          noise: clamp(0.1 + level * 0.04 + settings.visualNoise / 118 + settings.distractors * 0.06, 0.1, 1.15),
+          bindDims: clamp(1 + Math.floor(level / 5) + featureLoad + Math.floor(adaptiveLoad * 2) + Math.floor(relationalLoad), 1, featurePool.length),
+          synthesisDims: clamp(3 + Math.floor(level / 6) + settings.bindLoad + Math.floor(synthesisLoad * 3), 3, featurePool.length),
+          distractors: clamp(settings.distractors + Math.floor(adaptiveLoad * 2), 0, 6),
+          mask: clamp(260 + settings.visualNoise * 2.2 + settings.distractors * 48, 240, 640)
+        };
+      }
+
+      function makeNBackTrial(diff) {
+        const dims = shuffle(featurePool).slice(0, diff.bindDims);
+        const current = newStim();
+        const target = state.history.length >= diff.n ? state.history[state.history.length - diff.n] : newStim();
+        const options = [target];
+        let attempts = 0;
+        while (options.length < 4 && attempts < 80) {
+          attempts += 1;
+          const noisy = { ...target };
+          const changes = state.settings.closeDecoys ? 1 : clamp(1 + diff.distractors, 1, 4);
+          shuffle(dims).slice(0, changes).forEach((dim) => changeField(noisy, dim, target));
+          if (!state.settings.closeDecoys && Math.random() < 0.55) changeField(noisy, pick(featurePool), target);
+          if (!options.some((item) => equalStim(item, noisy))) options.push(noisy);
+        }
+        while (options.length < 4) options.push(mutateStim(target));
+        const shuffled = shuffle(options);
+        return {
+          type: "nback",
+          chamber: chambers.nback,
+          prompt: `N-${diff.n} ${dims.map((dim) => dim.toUpperCase()).join("+")}`,
+          n: diff.n,
+          dims,
+          current,
+          target,
+          options: shuffled,
+          correctIndex: shuffled.findIndex((item) => equalStim(item, target)),
+          timeLimit: diff.time,
+          created: performance.now()
+        };
+      }
+
+      function makeStroopTrial(diff) {
+        const wordIndex = int(0, 3);
+        let inkIndex = int(0, 3);
+        if (inkIndex === wordIndex) inkIndex = (inkIndex + int(1, 3)) % 4;
+        const channel = Math.random() < 0.5 ? "INK" : "WORD";
+        const correctColorIndex = channel === "INK" ? inkIndex : wordIndex;
+        const options = [0, 1, 2, 3].map((colorIndex) => ({
+          colorIndex,
+          glyph: palette[colorIndex].name,
+          color: palette[colorIndex].hex
+        }));
+        return {
+          type: "stroop",
+          chamber: chambers.stroop,
+          prompt: channel,
+          channel,
+          wordIndex,
+          inkIndex,
+          options,
+          correctColorIndex,
+          correctIndex: correctColorIndex,
+          timeLimit: diff.time * 0.82,
+          created: performance.now(),
+          noise: diff.noise
+        };
+      }
+
+      function makeRotationTrial(diff) {
+        const base = newStim({ mirror: false });
+        const correct = { ...base, spin: int(1, 3), mirror: false };
+        const options = [correct];
+        options.push({ ...base, spin: correct.spin, mirror: true });
+        options.push(mutateStim({ ...base, spin: (correct.spin + 1) % 4, mirror: false }, ["color"]));
+        options.push(mutateStim({ ...base, spin: (correct.spin + 3) % 4, mirror: true }, ["color"]));
+        const shuffled = shuffle(options);
+        return {
+          type: "rotate",
+          chamber: chambers.rotate,
+          prompt: `ROTATE ${90 * ((correct.spin + 4) % 4)} DEG`,
+          base,
+          correct,
+          options: shuffled,
+          correctIndex: shuffled.findIndex((item) => item.spin === correct.spin && item.mirror === false && item.form === correct.form),
+          timeLimit: diff.time * 0.9,
+          created: performance.now()
+        };
+      }
+
+      function makeChangeTrial(diff) {
+        const count = diff.objects;
+        const cells = [];
+        for (let i = 0; i < count; i += 1) {
+          cells.push({
+            id: i,
+            x: ((i * 37) % 100) / 100,
+            y: ((i * 53 + 19) % 100) / 100,
+            stim: newStim({ form: int(0, 5), color: i % 5 })
+          });
+        }
+        const changedIndex = int(0, count - 1);
+        const after = cells.map((cell, index) => index === changedIndex ? { ...cell, stim: mutateStim(cell.stim, ["orbit"]) } : { ...cell, stim: { ...cell.stim } });
+        const changedDiff = diffStim(cells[changedIndex].stim, after[changedIndex].stim);
+        const candidates = shuffle([changedIndex, ...shuffle(cells.map((cell) => cell.id).filter((id) => id !== changedIndex)).slice(0, 3)]);
+        return {
+          type: "change",
+          chamber: chambers.change,
+          prompt: `DELTA ${count}`,
+          before: cells,
+          after,
+          changedIndex,
+          changedDiff,
+          options: candidates.map((id) => ({ id, stim: after[id].stim })),
+          correctIndex: candidates.indexOf(changedIndex),
+          timeLimit: diff.time + diff.reveal,
+          reveal: diff.reveal,
+          mask: diff.mask,
+          created: performance.now(),
+          phase: "study"
+        };
+      }
+
+      function applyOp(stim, op) {
+        const out = { ...stim };
+        if (op.color) out.color = (out.color + op.color + palette.length - 1) % (palette.length - 1);
+        if (op.form) out.form = (out.form + op.form + 6) % 6;
+        if (op.spin) out.spin = (out.spin + op.spin + 4) % 4;
+        if (op.tone) out.tone = (out.tone + op.tone + 5) % 5;
+        if (op.mirror) out.mirror = !out.mirror;
+        if (op.glyph) out.glyph = glyphs[(glyphs.indexOf(out.glyph) + op.glyph + glyphs.length) % glyphs.length];
+        return out;
+      }
+
+      function makeAnalogyTrial(diff) {
+        const op = {
+          color: int(1, 3),
+          form: int(1, 2),
+          spin: int(1, 3),
+          tone: int(1, 2),
+          mirror: true,
+          glyph: int(1, 2)
+        };
+        const activeOps = shuffle(Object.keys(op)).slice(0, clamp(2 + Math.floor(state.level / 5) + state.settings.bindLoad, 2, 6));
+        Object.keys(op).forEach((key) => {
+          if (!activeOps.includes(key)) op[key] = typeof op[key] === "boolean" ? false : 0;
+        });
+        const a = newStim();
+        const b = applyOp(a, op);
+        const c = newStim();
+        const correct = applyOp(c, op);
+        const options = [correct];
+        let attempts = 0;
+        while (options.length < 4 && attempts < 80) {
+          attempts += 1;
+          const brokenOp = { ...op };
+          const keys = shuffle(Object.keys(op));
+          const key = keys[0];
+          if (typeof brokenOp[key] === "boolean") {
+            brokenOp[key] = !brokenOp[key];
+          } else {
+            brokenOp[key] = (brokenOp[key] || 0) + pick([-1, 1, 2]);
+          }
+          const candidate = applyOp(c, brokenOp);
+          if (!options.some((item) => equalStim(item, candidate))) options.push(candidate);
+        }
+        while (options.length < 4) options.push(mutateStim(correct));
+        const shuffled = shuffle(options);
+        return {
+          type: "analogy",
+          chamber: chambers.analogy,
+          prompt: "A:B :: C:?",
+          a,
+          b,
+          c,
+          op,
+          activeOps,
+          correct,
+          options: shuffled,
+          correctIndex: shuffled.findIndex((item) => equalStim(item, correct)),
+          timeLimit: diff.time * 1.08,
+          created: performance.now()
+        };
+      }
+
+      function makeSynthesisTrial(diff) {
+        const sources = [newStim(), newStim(), newStim()];
+        const dims = shuffle(featurePool).slice(0, diff.synthesisDims);
+        const mapping = {};
+        const correct = { ...sources[0] };
+        dims.forEach((feature) => {
+          const sourceIndex = int(0, 2);
+          mapping[feature] = sourceIndex;
+          correct[feature] = sources[sourceIndex][feature];
+        });
+
+        const options = [correct];
+        let attempts = 0;
+        while (options.length < 4 && attempts < 80) {
+          attempts += 1;
+          const candidate = { ...correct };
+          const feature = pick(dims);
+          const currentSource = mapping[feature];
+          const alternateSources = [0, 1, 2].filter((sourceIndex) => sourceIndex !== currentSource);
+          const sourceIndex = pick(alternateSources);
+          candidate[feature] = sources[sourceIndex][feature];
+          if (state.settings.closeDecoys && Math.random() < 0.45) {
+            const secondFeature = pick(dims.filter((dim) => dim !== feature) || dims);
+            candidate[secondFeature] = sources[pick([0, 1, 2])][secondFeature];
+          }
+          if (!options.some((item) => equalStim(item, candidate))) options.push(candidate);
+        }
+        while (options.length < 4) options.push(mutateStim(correct));
+
+        const shuffled = shuffle(options);
+        const prompt = dims.map((feature) => `${featureCodes[feature]}:${"ABC"[mapping[feature]]}`).join(" ");
+        return {
+          type: "synthesis",
+          chamber: chambers.synthesis,
+          prompt,
+          sources,
+          mapping,
+          dims,
+          correct,
+          options: shuffled,
+          correctIndex: shuffled.findIndex((item) => equalStim(item, correct)),
+          timeLimit: diff.time * 1.02,
+          created: performance.now()
+        };
+      }
+
+      function makeTrial() {
+        const diff = difficulty();
+        const enabled = activeChambers();
+        const makers = {
+          nback: makeNBackTrial,
+          stroop: makeStroopTrial,
+          rotate: makeRotationTrial,
+          change: makeChangeTrial,
+          analogy: makeAnalogyTrial,
+          synthesis: makeSynthesisTrial
+        };
+        for (let attempt = 0; attempt < 40; attempt += 1) {
+          let bag = enabled.length ? enabled.slice() : ["synthesis"];
+          if (state.lastMissType && enabled.includes(state.lastMissType)) bag.push(state.lastMissType, state.lastMissType);
+          const hottest = enabled
+            .map((type) => ({ type, pressure: adaptiveAverage(trialAxes(type)) }))
+            .sort((a, b) => b.pressure - a.pressure)[0];
+          if (hottest && hottest.pressure > 58) bag.push(hottest.type, hottest.type);
+          const weakest = enabled
+            .map((type) => {
+              const axes = trialAxes(type);
+              const weakness = axes.reduce((sum, axis) => sum + (state.weakness[axis] || 0), 0) / Math.max(1, axes.length);
+              const recent = axes.map((axis) => recentAxisWindow(axis));
+              const accuracy = recent.reduce((sum, item) => sum + item.accuracy, 0) / Math.max(1, recent.length);
+              return { type, pressure: weakness + (1 - accuracy) * 42 };
+            })
+            .sort((a, b) => b.pressure - a.pressure)[0];
+          if (weakest && weakest.pressure > 18) bag.push(weakest.type, weakest.type, weakest.type);
+          if (state.settings.volatileMix && state.recentChambers.length) {
+            const filtered = bag.filter((name) => !state.recentChambers.includes(name) || name === state.lastMissType);
+            if (filtered.length) bag = filtered;
+          }
+          if (strainScore() > 68 && enabled.includes("synthesis")) bag.push("synthesis", "synthesis");
+          if (strainScore() > 80 && enabled.includes("change")) bag.push("change");
+          if (state.total < 2) {
+            const openers = ["synthesis", "nback", "stroop"].filter((name) => enabled.includes(name));
+            if (openers.length) bag.push(...openers);
+          }
+          const type = pick(bag);
+          const trial = makers[type](diff);
+          if (setTrialSolution(trial)) {
+            state.recentChambers.push(type);
+            if (state.recentChambers.length > 2) state.recentChambers.shift();
+            return trial;
+          }
+        }
+        const fallback = makeSynthesisTrial(diff);
+        setTrialSolution(fallback);
+        return fallback;
+      }
+
+      function startTrial() {
+        state.trial = makeTrial();
+        state.trialStarted = performance.now();
+        state.feedbackUntil = 0;
+        state.lastWasCorrect = null;
+        const trial = state.trial;
+        if (trial.type === "change") {
+          state.phaseUntil = state.trialStarted + trial.reveal;
+          trial.phase = "study";
+          dom.answers.forEach((button) => {
+            button.disabled = true;
+          });
+        } else {
+          state.phaseUntil = 0;
+        }
+        dom.answers.forEach((button) => {
+          if (trial.type !== "change") button.disabled = false;
+          button.classList.remove("correct", "wrong");
+        });
+        updateCue();
+        showTrialProof(trial);
+        drawAnswers();
+        if (trial.type === "nback" && !state.muted) playTone(230 + trial.current.tone * 95, 0.12, 0.055);
+        if (trial.type === "stroop" && !state.muted) playTone(190 + trial.inkIndex * 85, 0.09, 0.035);
+      }
+
+      function updateCue() {
+        const trial = state.trial;
+        const diff = difficulty();
+        if (!trial) return;
+        dom.chamber.textContent = trial.chamber.name;
+        dom.load.textContent = `${String(state.level).padStart(2, "0")} / N${diff.n} / B${diff.bindDims}`;
+        dom.ruleGlyph.textContent = trial.chamber.glyph;
+        dom.ruleTitle.textContent = trial.prompt;
+        dom.ruleText.textContent = trial.chamber.copy;
+        dom.phaseLabel.textContent = trial.chamber.root;
+        updateProfile();
+      }
+
+      function updateHud() {
+        dom.score.textContent = String(state.score);
+        dom.level.textContent = String(state.level).padStart(2, "0");
+        dom.streak.textContent = String(state.streak);
+        dom.best.textContent = String(state.best);
+        dom.accuracy.textContent = state.total ? `${Math.round((state.correct / state.total) * 100)}%` : "--";
+        updateProfile();
+      }
+
+      function answer(index) {
+        if (!state.running || state.paused || !state.trial || state.feedbackUntil) return;
+        const now = performance.now();
+        const trial = state.trial;
+        if (trial.type === "change" && trial.phase !== "probe") return;
+        const isCorrect = index === trial.correctIndex;
+        state.total += 1;
+        state.correct += isCorrect ? 1 : 0;
+        state.streak = isCorrect ? state.streak + 1 : 0;
+        state.misses = isCorrect ? 0 : state.misses + 1;
+
+        const elapsed = now - state.trialStarted;
+        const speed = clamp(1 - elapsed / trial.timeLimit, 0, 1);
+        if (isCorrect) {
+          const points = Math.round((80 + state.level * 16 + speed * 120 + state.streak * 7) * (1 + strainScore() / 140));
+          state.score += points;
+          const climbEvery = clamp(5 - state.settings.adaptation, 2, 4);
+          if (state.streak % climbEvery === 0) state.level = clamp(state.level + Math.ceil(state.settings.adaptation / 2), 1, levelMax);
+          if (!state.muted) playTone(580 + state.level * 18, 0.12, 0.075);
+        } else {
+          state.level = clamp(state.level - Math.ceil(state.settings.adaptation / (state.misses >= 2 ? 1.6 : 2.4)), 1, levelMax);
+          if (!state.muted) playTone(130, 0.16, 0.07);
+        }
+
+        if (state.score > state.best) {
+          state.best = state.score;
+          localStorage.setItem("axiom-rift-best", String(state.best));
+        }
+
+        state.lastWasCorrect = isCorrect;
+        state.feedbackUntil = now + 680;
+        dom.answers.forEach((button, buttonIndex) => {
+          button.disabled = true;
+          button.classList.toggle("correct", buttonIndex === trial.correctIndex);
+          button.classList.toggle("wrong", buttonIndex === index && !isCorrect);
+        });
+        updateAdaptiveModel(trial, isCorrect, elapsed, false);
+        showOutcomeProof(trial, isCorrect ? "HIT" : "MISS", index);
+        addLog(trial, isCorrect);
+        if (trial.current) state.history.push(trial.current);
+        else state.history.push(newStim());
+        if (state.history.length > 24) state.history.shift();
+        updateHud();
+      }
+
+      function timeoutTrial() {
+        if (!state.trial || state.feedbackUntil) return;
+        const elapsed = performance.now() - state.trialStarted;
+        state.total += 1;
+        state.streak = 0;
+        state.misses += 1;
+        state.level = clamp(state.level - Math.ceil(state.settings.adaptation / 2), 1, levelMax);
+        state.lastWasCorrect = false;
+        state.feedbackUntil = performance.now() + 720;
+        dom.answers.forEach((button, buttonIndex) => {
+          button.disabled = true;
+          button.classList.toggle("correct", buttonIndex === state.trial.correctIndex);
+          button.classList.remove("wrong");
+        });
+        updateAdaptiveModel(state.trial, false, elapsed, true);
+        showOutcomeProof(state.trial, "TIMEOUT", null);
+        addLog(state.trial, false);
+        state.history.push(state.trial.current || newStim());
+        if (state.history.length > 24) state.history.shift();
+        if (!state.muted) playTone(92, 0.22, 0.08);
+        updateHud();
+      }
+
+      function addLog(trial, isCorrect) {
+        const item = document.createElement("div");
+        item.className = "log-entry";
+        const canvas = document.createElement("canvas");
+        const label = document.createElement("span");
+        const mark = document.createElement("strong");
+        label.textContent = `${trial.chamber.name} | ${trial.prompt}`;
+        mark.textContent = isCorrect ? "HIT" : "MISS";
+        mark.style.color = isCorrect ? cssVar("--good") : cssVar("--bad");
+        item.append(canvas, label, mark);
+        dom.log.prepend(item);
+        while (dom.log.children.length > 11) dom.log.lastElementChild.remove();
+        const c = resizeCanvas(canvas, 48, 36);
+        c.clearRect(0, 0, 48, 36);
+        c.fillStyle = "rgba(255,255,255,0.04)";
+        c.fillRect(0, 0, 48, 36);
+        drawMiniStim(c, trial.current || trial.base || trial.a || trial.sources?.[0] || trial.after?.[0]?.stim || newStim(), 24, 18, 14, { alpha: 0.92 });
+      }
+
+      function renderChips(chips) {
+        dom.proofChips.replaceChildren();
+        chips.forEach((chip) => {
+          const item = document.createElement("span");
+          item.className = "feature-chip";
+          const key = document.createElement("b");
+          key.textContent = chip.key;
+          const value = document.createElement("span");
+          value.textContent = chip.value;
+          item.append(key, value);
+          dom.proofChips.append(item);
+        });
+      }
+
+      function proofLinesForOutcome(trial, status, chosenIndex) {
+        const lines = trial.solution.proofLines.slice();
+        if (status === "HIT") {
+          lines.unshift(`Chosen option ${chosenIndex + 1} satisfies the rule.`);
+        } else if (status === "MISS") {
+          lines.unshift(`Chosen option ${chosenIndex + 1} fails: ${explainFailure(trial, chosenIndex)}`);
+        } else if (status === "TIMEOUT") {
+          lines.unshift("No answer arrived before the timer emptied.");
+        }
+
+        if (state.settings.proofPressure === "compact") return lines.slice(0, 2);
+        if (state.settings.proofPressure === "misses" && status === "HIT") {
+          return ["Correct. Full proof is hidden by Proof Pressure: Misses Only."];
+        }
+        return lines;
+      }
+
+      function renderProof(proof) {
+        state.lastProof = proof;
+        dom.logicStatus.textContent = proof.status;
+        dom.logicStatus.className = `logic-status ${proof.statusClass || ""}`.trim();
+        dom.logicRule.textContent = proof.rule;
+        dom.proofChosen.textContent = proof.chosen || "--";
+        dom.proofCorrect.textContent = proof.correct || "--";
+        dom.truthLock.textContent = proof.locked ? "Truth Lock" : "Unchecked";
+        dom.truthLock.className = proof.locked ? "truth-lock locked" : "truth-lock";
+        renderChips(proof.chips || []);
+        dom.proofLines.replaceChildren();
+        (proof.lines || []).forEach((line) => {
+          const item = document.createElement("li");
+          item.textContent = line;
+          dom.proofLines.append(item);
+        });
+      }
+
+      function showTrialProof(trial) {
+        if (!trial?.solution) return;
+        renderProof({
+          status: "Armed",
+          statusClass: "",
+          rule: trial.solution.rule,
+          chosen: "Awaiting response",
+          correct: "Hidden until answer",
+          chips: trial.solution.chips,
+          locked: assertUniqueOptions(trial),
+          lines: [
+            "Four options verified unique.",
+            "Exactly one option satisfies the active rule."
+          ]
+        });
+      }
+
+      function showOutcomeProof(trial, status, chosenIndex = null) {
+        if (!trial?.solution) return;
+        const chosen = chosenIndex === null ? "No answer" : trial.solution.optionSummaries[chosenIndex];
+        renderProof({
+          status,
+          statusClass: status.toLowerCase(),
+          rule: trial.solution.rule,
+          chosen,
+          correct: trial.solution.correctSummary,
+          chips: trial.solution.chips,
+          locked: assertUniqueOptions(trial),
+          lines: proofLinesForOutcome(trial, status, chosenIndex)
+        });
+      }
+
+      function playTone(freq, duration, gainValue) {
+        try {
+          if (!state.audio) {
+            const AudioContext = window.AudioContext || window.webkitAudioContext;
+            state.audio = new AudioContext();
+          }
+          const ctxAudio = state.audio;
+          if (ctxAudio.state === "suspended") ctxAudio.resume();
+          const osc = ctxAudio.createOscillator();
+          const gain = ctxAudio.createGain();
+          osc.type = "sine";
+          osc.frequency.value = freq;
+          gain.gain.setValueAtTime(0.0001, ctxAudio.currentTime);
+          gain.gain.exponentialRampToValueAtTime(gainValue, ctxAudio.currentTime + 0.015);
+          gain.gain.exponentialRampToValueAtTime(0.0001, ctxAudio.currentTime + duration);
+          osc.connect(gain);
+          gain.connect(ctxAudio.destination);
+          osc.start();
+          osc.stop(ctxAudio.currentTime + duration + 0.02);
+        } catch (error) {
+          state.muted = true;
+        }
+      }
+
+      function drawBackground(width, height, t) {
+        ctx.clearRect(0, 0, width, height);
+        ctx.fillStyle = "#10100f";
+        ctx.fillRect(0, 0, width, height);
+        ctx.save();
+        const noise = state.settings.visualNoise / 100;
+        const particleCount = 34 + Math.round(noise * 48) + state.settings.distractors * 8;
+        ctx.globalAlpha = 0.12 + noise * 0.16;
+        for (let i = 0; i < particleCount; i += 1) {
+          const x = (Math.sin(i * 12.989 + t * 0.00017) * 0.5 + 0.5) * width;
+          const y = (Math.cos(i * 8.113 + t * 0.00021) * 0.5 + 0.5) * height;
+          const r = 1.2 + ((i * 7) % 5);
+          ctx.fillStyle = palette[i % palette.length].hex;
+          ctx.beginPath();
+          ctx.arc(x, y, r, 0, Math.PI * 2);
+          ctx.fill();
+        }
+        ctx.strokeStyle = `rgba(243,240,232,${0.05 + noise * 0.06})`;
+        ctx.lineWidth = 1;
+        for (let y = 32; y < height; y += 34) {
+          ctx.beginPath();
+          ctx.moveTo(0, y + Math.sin(t * 0.001 + y) * 2);
+          ctx.lineTo(width, y + Math.cos(t * 0.001 + y) * 2);
+          ctx.stroke();
+        }
+        if (state.settings.distractors) {
+          ctx.globalAlpha = 0.05 + noise * 0.08;
+          for (let i = 0; i < state.settings.distractors * 9; i += 1) {
+            ctx.strokeStyle = palette[(i + state.level) % palette.length].hex;
+            ctx.beginPath();
+            ctx.moveTo((i * 97 + t * 0.03) % width, 0);
+            ctx.lineTo((i * 71 + width * 0.25 + t * 0.02) % width, height);
+            ctx.stroke();
+          }
+        }
+        ctx.restore();
+      }
+
+      function drawLabel(text, x, y, size = 16, color = "#f3f0e8", align = "center") {
+        ctx.save();
+        ctx.fillStyle = color;
+        ctx.font = `800 ${size}px Inter, system-ui, sans-serif`;
+        ctx.textAlign = align;
+        ctx.textBaseline = "middle";
+        ctx.fillText(text, x, y);
+        ctx.restore();
+      }
+
+      function drawGlyphShape(c, stim, x, y, radius, options = {}) {
+        const color = palette[stim.color % palette.length].hex;
+        const alpha = options.alpha ?? 1;
+        const rotation = ((stim.spin || 0) * Math.PI) / 2 + (options.extraRotation || 0);
+        const sides = 3 + (stim.form % 5);
+        c.save();
+        c.translate(x, y);
+        c.rotate(rotation);
+        if (stim.mirror) c.scale(-1, 1);
+        c.globalAlpha = alpha;
+        c.lineWidth = Math.max(2, radius * 0.08);
+        c.strokeStyle = color;
+        c.fillStyle = hexToRgba(color, 0.14);
+        c.beginPath();
+        for (let i = 0; i < sides; i += 1) {
+          const theta = -Math.PI / 2 + (i / sides) * Math.PI * 2;
+          const warp = 0.78 + 0.25 * Math.sin(i * 1.7 + stim.orbit);
+          const px = Math.cos(theta) * radius * warp;
+          const py = Math.sin(theta) * radius * warp;
+          if (i === 0) c.moveTo(px, py);
+          else c.lineTo(px, py);
+        }
+        c.closePath();
+        c.fill();
+        c.stroke();
+        c.strokeStyle = "rgba(243,240,232,0.55)";
+        c.beginPath();
+        c.moveTo(-radius * 0.5, 0);
+        c.bezierCurveTo(-radius * 0.2, -radius * 0.6, radius * 0.35, radius * 0.5, radius * 0.62, -radius * 0.1);
+        c.stroke();
+        c.fillStyle = "#f3f0e8";
+        c.font = `900 ${Math.max(11, radius * 0.36)}px Inter, system-ui, sans-serif`;
+        c.textAlign = "center";
+        c.textBaseline = "middle";
+        c.fillText(stim.glyph, 0, 0);
+        c.restore();
+      }
+
+      function drawMiniStim(c, stim, x, y, r, options = {}) {
+        c.save();
+        c.globalAlpha = options.alpha ?? 1;
+        c.strokeStyle = hexToRgba(palette[stim.color % palette.length].hex, 0.46);
+        c.lineWidth = 1.5;
+        for (let i = 0; i <= stim.tone; i += 1) {
+          c.beginPath();
+          c.arc(x, y, r + i * 3.2, 0, Math.PI * 2);
+          c.stroke();
+        }
+        drawGlyphShape(c, stim, x, y, r, options);
+        c.restore();
+      }
+
+      function drawStimCluster(stim, x, y, r, t, label) {
+        ctx.save();
+        const dots = 6 + state.settings.distractors;
+        for (let i = 0; i < dots; i += 1) {
+          const angle = (i / dots) * Math.PI * 2 + t * 0.00035 * (stim.orbit + 1);
+          const px = x + Math.cos(angle) * (r * 1.15 + stim.orbit * 4);
+          const py = y + Math.sin(angle) * (r * 1.15 + stim.orbit * 4);
+          ctx.fillStyle = hexToRgba(palette[(stim.color + i) % palette.length].hex, 0.36);
+          ctx.beginPath();
+          ctx.arc(px, py, 3 + ((stim.tone + i) % 3), 0, Math.PI * 2);
+          ctx.fill();
+        }
+        drawMiniStim(ctx, stim, x, y, r, { extraRotation: Math.sin(t * 0.001) * 0.05 });
+        if (label && !state.settings.hiddenLabels) drawLabel(label, x, y + r * 1.62, 13, "rgba(243,240,232,0.68)");
+        ctx.restore();
+      }
+
+      function drawNBack(trial, width, height, t) {
+        const cx = width * 0.5;
+        const cy = height * 0.5;
+        const r = Math.min(width, height) * 0.14;
+        drawStimCluster(trial.current, cx, cy, r, t, "NOW");
+        ctx.save();
+        ctx.strokeStyle = "rgba(243,240,232,0.18)";
+        ctx.setLineDash([9, 10]);
+        ctx.lineWidth = 2;
+        ctx.beginPath();
+        ctx.arc(cx, cy, r * 1.75, 0, Math.PI * 2);
+        ctx.stroke();
+        ctx.restore();
+        drawLabel(trial.prompt, cx, Math.max(54, cy - r * 2.2), 24, "#f4bd4b");
+      }
+
+      function drawStroop(trial, width, height, t) {
+        const cx = width * 0.5;
+        const cy = height * 0.52;
+        const colorWord = palette[trial.wordIndex].name;
+        const ink = palette[trial.inkIndex].hex;
+        ctx.save();
+        ctx.translate(cx, cy);
+        ctx.rotate(Math.sin(t * 0.0011) * 0.035);
+        ctx.font = `900 ${Math.min(width * 0.16, 92)}px Inter, system-ui, sans-serif`;
+        ctx.textAlign = "center";
+        ctx.textBaseline = "middle";
+        ctx.fillStyle = hexToRgba(ink, 0.18);
+        ctx.fillText(colorWord, 8, 8);
+        ctx.fillStyle = ink;
+        ctx.fillText(colorWord, 0, 0);
+        ctx.strokeStyle = "rgba(243,240,232,0.42)";
+        ctx.lineWidth = 2;
+        ctx.strokeText(colorWord, 0, 0);
+        ctx.restore();
+        drawLabel(trial.prompt, cx, cy - 118, 30, "#f3f0e8");
+        for (let i = 0; i < 7; i += 1) {
+          const angle = t * 0.001 + i;
+          ctx.fillStyle = hexToRgba(palette[(trial.wordIndex + i) % 5].hex, 0.36);
+          ctx.fillRect(cx + Math.cos(angle) * 180, cy + Math.sin(angle * 1.2) * 130, 18, 18);
+        }
+      }
+
+      function drawRotation(trial, width, height, t) {
+        const cx = width * 0.5;
+        const cy = height * 0.5;
+        const r = Math.min(width, height) * 0.16;
+        drawStimCluster({ ...trial.base, spin: 0, mirror: false }, cx, cy, r, t, "SOURCE");
+        ctx.save();
+        ctx.strokeStyle = "rgba(243,240,232,0.18)";
+        ctx.lineWidth = 2;
+        ctx.beginPath();
+        ctx.arc(cx, cy, r * 1.85, t * 0.001, t * 0.001 + Math.PI * 1.55);
+        ctx.stroke();
+        ctx.restore();
+        drawLabel(trial.prompt, cx, Math.max(54, cy - r * 2.2), 24, "#55d7c7");
+      }
+
+      function drawChange(trial, width, height, t) {
+        const now = performance.now();
+        if (!state.paused && trial.phase === "study" && now > state.phaseUntil) {
+          trial.phase = "mask";
+          state.phaseUntil = now + trial.mask;
+          dom.answers.forEach((button) => {
+            button.disabled = true;
+          });
+          drawAnswers();
+        } else if (!state.paused && trial.phase === "mask" && now > state.phaseUntil) {
+          trial.phase = "probe";
+          dom.answers.forEach((button) => {
+            button.disabled = false;
+          });
+          drawAnswers();
+        }
+
+        const cells = trial.phase === "probe" ? trial.after : trial.before;
+        const margin = Math.min(width, height) * 0.18;
+        const usableW = width - margin * 2;
+        const usableH = height - margin * 2;
+        if (trial.phase === "mask") {
+          ctx.save();
+          const maskBlocks = 72 + Math.round(state.settings.visualNoise * 1.2) + state.settings.distractors * 24;
+          for (let i = 0; i < maskBlocks; i += 1) {
+            ctx.fillStyle = hexToRgba(palette[i % palette.length].hex, 0.12 + (i % 4) * 0.04);
+            ctx.fillRect(rand(margin, width - margin), rand(margin, height - margin), rand(12, 50), rand(8, 36));
+          }
+          ctx.restore();
+          drawLabel("MASK", width * 0.5, height * 0.5, 34, "#ff6b7a");
+          return;
+        }
+        cells.forEach((cell, index) => {
+          const x = margin + cell.x * usableW;
+          const y = margin + cell.y * usableH;
+          ctx.save();
+          ctx.strokeStyle = "rgba(243,240,232,0.12)";
+          ctx.beginPath();
+          ctx.moveTo(width * 0.5, height * 0.5);
+          ctx.lineTo(x, y);
+          ctx.stroke();
+          drawMiniStim(ctx, cell.stim, x, y, 18 + (index % 3) * 3, { alpha: trial.phase === "study" ? 1 : 0.92 });
+          ctx.restore();
+        });
+        drawLabel(trial.phase === "study" ? "BIND" : "DELTA", width * 0.5, Math.max(46, margin * 0.55), 24, "#95dd64");
+      }
+
+      function drawAnalogy(trial, width, height, t) {
+        const y = height * 0.5;
+        const gap = width / 5;
+        const r = Math.min(width, height) * 0.095;
+        const nodes = [
+          { stim: trial.a, x: gap, label: "A" },
+          { stim: trial.b, x: gap * 2, label: "B" },
+          { stim: trial.c, x: gap * 3.25, label: "C" }
+        ];
+        ctx.save();
+        ctx.strokeStyle = "rgba(243,240,232,0.22)";
+        ctx.lineWidth = 2;
+        ctx.beginPath();
+        ctx.moveTo(gap + r * 1.4, y);
+        ctx.lineTo(gap * 2 - r * 1.4, y);
+        ctx.moveTo(gap * 3.25 + r * 1.4, y);
+        ctx.lineTo(gap * 4.15, y);
+        ctx.stroke();
+        drawLabel("::", gap * 2.62, y, 36, "rgba(243,240,232,0.58)");
+        drawLabel("?", gap * 4.38, y, 54, "#f4bd4b");
+        ctx.restore();
+        nodes.forEach((node) => drawStimCluster(node.stim, node.x, y, r, t, node.label));
+        drawLabel(trial.prompt, width * 0.5, Math.max(48, y - r * 2.2), 24, "#b297ff");
+      }
+
+      function drawSynthesis(trial, width, height, t) {
+        const cx = width * 0.5;
+        const y = height * 0.52;
+        const r = Math.min(width, height) * 0.085;
+        const xs = [width * 0.23, width * 0.5, width * 0.77];
+        trial.sources.forEach((stim, index) => {
+          drawStimCluster(stim, xs[index], y, r, t + index * 200, "ABC"[index]);
+        });
+        ctx.save();
+        ctx.strokeStyle = "rgba(243,240,232,0.16)";
+        ctx.lineWidth = 1.5;
+        for (let i = 0; i < trial.dims.length; i += 1) {
+          const sourceIndex = trial.mapping[trial.dims[i]];
+          const angle = -Math.PI / 2 + (i / Math.max(1, trial.dims.length - 1)) * Math.PI;
+          ctx.beginPath();
+          ctx.moveTo(xs[sourceIndex], y - r * 1.35);
+          ctx.quadraticCurveTo(cx + Math.cos(angle) * width * 0.08, y - r * 2.55, cx, y - r * 2.05);
+          ctx.stroke();
+        }
+        ctx.restore();
+        drawLabel(trial.prompt, cx, Math.max(48, y - r * 2.9), state.settings.hiddenLabels ? 17 : 22, "#55d7c7");
+        if (!state.settings.hiddenLabels) {
+          drawLabel("Build answer from channel map", cx, y + r * 2.15, 13, "rgba(243,240,232,0.62)");
+        }
+      }
+
+      function drawFeedback(width, height) {
+        if (!state.feedbackUntil) return;
+        const remaining = clamp((state.feedbackUntil - performance.now()) / 680, 0, 1);
+        ctx.save();
+        ctx.globalAlpha = remaining * 0.26;
+        ctx.fillStyle = state.lastWasCorrect ? "#6ef3aa" : "#ff505f";
+        ctx.fillRect(0, 0, width, height);
+        ctx.restore();
+        drawLabel(state.lastWasCorrect ? "HIT" : "MISS", width * 0.5, height * 0.18, 22, state.lastWasCorrect ? "#6ef3aa" : "#ff505f");
+      }
+
+      function drawIdle(width, height, t) {
+        const cx = width * 0.5;
+        const cy = height * 0.5;
+        const base = newStim({ glyph: "AX", color: 0, form: 5, spin: Math.floor(t / 900) % 4, mirror: false });
+        drawStimCluster(base, cx, cy, Math.min(width, height) * 0.16, t, "RIFT");
+        drawLabel("AXIOM RIFT", cx, cy - Math.min(width, height) * 0.25, 26, "#f3f0e8");
+      }
+
+      function render(time) {
+        const box = dom.stage.getBoundingClientRect();
+        const width = box.width;
+        const height = box.height;
+        drawBackground(width, height, time);
+
+        if (!state.running || !state.trial) {
+          drawIdle(width, height, time);
+        } else {
+          const trial = state.trial;
+          if (trial.type === "nback") drawNBack(trial, width, height, time);
+          if (trial.type === "stroop") drawStroop(trial, width, height, time);
+          if (trial.type === "rotate") drawRotation(trial, width, height, time);
+          if (trial.type === "change") drawChange(trial, width, height, time);
+          if (trial.type === "analogy") drawAnalogy(trial, width, height, time);
+          if (trial.type === "synthesis") drawSynthesis(trial, width, height, time);
+          drawFeedback(width, height);
+
+          if (!state.paused && !state.feedbackUntil) {
+            const elapsed = performance.now() - state.trialStarted;
+            const available = trial.type === "change" ? trial.timeLimit : trial.timeLimit;
+            const scale = clamp(1 - elapsed / available, 0, 1);
+            dom.timerFill.style.transform = `scaleX(${scale})`;
+            if (scale <= 0 || (trial.type === "change" && trial.phase !== "probe" && elapsed > available)) timeoutTrial();
+          }
+
+          if (state.feedbackUntil && performance.now() > state.feedbackUntil) {
+            state.feedbackUntil = 0;
+            startTrial();
+          }
+        }
+
+        state.raf = requestAnimationFrame(render);
+      }
+
+      function hexToRgba(hex, alpha) {
+        const value = hex.replace("#", "");
+        const r = parseInt(value.slice(0, 2), 16);
+        const g = parseInt(value.slice(2, 4), 16);
+        const b = parseInt(value.slice(4, 6), 16);
+        return `rgba(${r}, ${g}, ${b}, ${alpha})`;
+      }
+
+      function drawAnswerCanvas(canvas, option, trial, index) {
+        const rect = canvas.getBoundingClientRect();
+        const c = resizeCanvas(canvas, Math.max(1, rect.width), Math.max(1, rect.height));
+        const w = rect.width;
+        const h = rect.height;
+        c.clearRect(0, 0, w, h);
+        c.fillStyle = "rgba(255,255,255,0.025)";
+        c.fillRect(0, 0, w, h);
+        c.strokeStyle = "rgba(243,240,232,0.12)";
+        c.strokeRect(0.5, 0.5, w - 1, h - 1);
+
+        if (!trial) {
+          drawMiniStim(c, newStim({ glyph: glyphs[index], color: index }), w / 2, h / 2, Math.min(w, h) * 0.22, { alpha: 0.4 });
+          return;
+        }
+        if (trial.type === "stroop") {
+          c.fillStyle = option.color;
+          c.fillRect(w * 0.18, h * 0.2, w * 0.64, h * 0.42);
+          c.fillStyle = "#11110f";
+          c.font = `900 ${Math.min(18, w * 0.18)}px Inter, system-ui, sans-serif`;
+          c.textAlign = "center";
+          c.textBaseline = "middle";
+          c.fillText(option.glyph, w / 2, h * 0.42);
+          return;
+        }
+        if (trial.type === "change") {
+          if (trial.phase !== "probe") {
+            c.fillStyle = "rgba(243,240,232,0.12)";
+            for (let i = 0; i < 10; i += 1) c.fillRect(rand(0, w), rand(0, h), rand(8, 24), rand(3, 14));
+            return;
+          }
+          drawMiniStim(c, option.stim, w / 2, h / 2, Math.min(w, h) * 0.24, { alpha: 0.95 });
+          c.fillStyle = "rgba(243,240,232,0.76)";
+          c.font = "800 11px Inter, system-ui, sans-serif";
+          c.textAlign = "center";
+          c.fillText(`CELL ${option.id + 1}`, w / 2, h - 10);
+          return;
+        }
+        drawMiniStim(c, option, w / 2, h / 2, Math.min(w, h) * 0.24, { alpha: 0.96 });
+      }
+
+      function drawAnswers() {
+        dom.answers.forEach((button, index) => {
+          const canvas = button.querySelector("canvas");
+          const option = state.trial?.options?.[index] || newStim({ glyph: glyphs[index], color: index });
+          drawAnswerCanvas(canvas, option, state.trial, index);
+        });
+      }
+
+      function start({ muted = false } = {}) {
+        state.running = true;
+        state.paused = false;
+        state.muted = muted;
+        state.score = 0;
+        state.level = state.settings.startLevel;
+        state.streak = 0;
+        state.total = 0;
+        state.correct = 0;
+        state.misses = 0;
+        state.recentChambers = [];
+        resetAdaptiveModel();
+        state.history = Array.from({ length: Math.max(12, difficulty().n + 3) }, () => newStim());
+        state.startedAt = performance.now();
+        dom.log.replaceChildren();
+        dom.veil.hidden = true;
+        dom.pauseBtn.textContent = "Pause";
+        updateHud();
+        startTrial();
+      }
+
+      function reset() {
+        state.running = false;
+        state.paused = false;
+        state.trial = null;
+        state.score = 0;
+        state.level = state.settings.startLevel;
+        state.streak = 0;
+        state.total = 0;
+        state.correct = 0;
+        state.misses = 0;
+        state.history = [];
+        state.recentChambers = [];
+        resetAdaptiveModel();
+        state.feedbackUntil = 0;
+        state.pausedAt = 0;
+        dom.log.replaceChildren();
+        dom.timerFill.style.transform = "scaleX(1)";
+        dom.veil.hidden = false;
+        dom.chamber.textContent = "Dormant";
+        dom.load.textContent = "0";
+        updateProfile();
+        dom.ruleGlyph.textContent = "0";
+        dom.ruleTitle.textContent = "Null Field";
+        dom.ruleText.textContent = "The first fracture starts when the clock starts.";
+        dom.phaseLabel.textContent = "abstract adaptive gauntlet";
+        renderProof({
+          status: "Dormant",
+          statusClass: "",
+          rule: "Start a run to arm the proof engine.",
+          chosen: "--",
+          correct: "--",
+          chips: [],
+          locked: false,
+          lines: []
+        });
+        dom.answers.forEach((button) => {
+          button.disabled = true;
+          button.classList.remove("correct", "wrong");
+        });
+        updateHud();
+        drawAnswers();
+      }
+
+      function togglePause() {
+        if (!state.running) return;
+        state.paused = !state.paused;
+        dom.pauseBtn.textContent = state.paused ? "Resume" : "Pause";
+        if (state.paused) {
+          state.pausedAt = performance.now();
+        } else if (state.trial) {
+          const pausedFor = performance.now() - state.pausedAt;
+          state.trialStarted += pausedFor;
+          if (state.phaseUntil) state.phaseUntil += pausedFor;
+          if (state.feedbackUntil) state.feedbackUntil += pausedFor;
+          state.pausedAt = 0;
+        }
+      }
+
+      function pauseForPanel(owner) {
+        if (state.running && !state.paused) {
+          togglePause();
+          state.pauseOwner = owner;
+        } else {
+          state.pauseOwner = "";
+        }
+      }
+
+      function resumeForPanel(owner) {
+        if (state.pauseOwner === owner && state.paused) {
+          togglePause();
+        }
+        state.pauseOwner = "";
+      }
+
+      function openView() {
+        if (typeof dom.viewDialog.showModal === "function") {
+          dom.viewDialog.showModal();
+        } else {
+          dom.viewDialog.setAttribute("open", "");
+        }
+      }
+
+      function closeView() {
+        if (typeof dom.viewDialog.close === "function") {
+          dom.viewDialog.close();
+        } else {
+          dom.viewDialog.removeAttribute("open");
+        }
+      }
+
+      function openGuide() {
+        closeView();
+        pauseForPanel("guide");
+        if (typeof dom.guideDialog.showModal === "function") {
+          dom.guideDialog.showModal();
+        } else {
+          dom.guideDialog.setAttribute("open", "");
+        }
+      }
+
+      function closeGuide() {
+        if (typeof dom.guideDialog.close === "function") {
+          dom.guideDialog.close();
+        } else {
+          dom.guideDialog.removeAttribute("open");
+        }
+        resumeForPanel("guide");
+      }
+
+      function openSettings() {
+        closeView();
+        pauseForPanel("settings");
+        syncSettingsControls();
+        if (typeof dom.settingsDialog.showModal === "function") {
+          dom.settingsDialog.showModal();
+        } else {
+          dom.settingsDialog.setAttribute("open", "");
+        }
+      }
+
+      function closeSettings() {
+        if (typeof dom.settingsDialog.close === "function") {
+          dom.settingsDialog.close();
+        } else {
+          dom.settingsDialog.removeAttribute("open");
+        }
+        resumeForPanel("settings");
+      }
+
+      function applyPreset(name) {
+        state.settings = normalizeSettings(presets[name] || defaultSettings);
+        syncSettingsControls();
+        saveSettings();
+      }
+
+      dom.startBtn.addEventListener("click", () => start({ muted: false }));
+      dom.silentBtn.addEventListener("click", () => start({ muted: true }));
+      dom.viewBtn.addEventListener("click", openView);
+      dom.closeViewBtn.addEventListener("click", closeView);
+      dom.closeViewBtnFoot.addEventListener("click", closeView);
+      dom.viewDialog.addEventListener("click", (event) => {
+        if (event.target === dom.viewDialog) closeView();
+      });
+      dom.settingsBtnStart.addEventListener("click", openSettings);
+      dom.settingsBtn.addEventListener("click", openSettings);
+      dom.guideBtnStart.addEventListener("click", openGuide);
+      dom.guideBtn.addEventListener("click", openGuide);
+      dom.closeGuideBtn.addEventListener("click", closeGuide);
+      dom.closeGuideBtnFoot.addEventListener("click", closeGuide);
+      dom.guideDialog.addEventListener("click", (event) => {
+        if (event.target === dom.guideDialog) closeGuide();
+      });
+      dom.guideDialog.addEventListener("close", () => resumeForPanel("guide"));
+      dom.closeSettingsBtn.addEventListener("click", closeSettings);
+      dom.applySettingsBtn.addEventListener("click", () => {
+        readSettingsControls();
+        closeSettings();
+        updateHud();
+      });
+      dom.resetSettingsBtn.addEventListener("click", () => applyPreset("abyss"));
+      dom.settingsDialog.addEventListener("click", (event) => {
+        if (event.target === dom.settingsDialog) closeSettings();
+      });
+      dom.settingsDialog.addEventListener("close", () => resumeForPanel("settings"));
+      dom.presetButtons.forEach((button) => {
+        button.addEventListener("click", () => applyPreset(button.dataset.preset));
+      });
+      Object.values(dom.settingInputs).forEach((input) => {
+        input.addEventListener("input", previewSettingsControls);
+      });
+      [...dom.chamberInputs, dom.settingHiddenLabels, dom.settingCloseDecoys, dom.settingVolatileMix, dom.settingProofPressure].forEach((input) => {
+        input.addEventListener("change", previewSettingsControls);
+      });
+      dom.resetBtn.addEventListener("click", reset);
+      dom.pauseBtn.addEventListener("click", togglePause);
+      dom.replayProofBtn.addEventListener("click", () => {
+        if (state.lastProof) renderProof(state.lastProof);
+      });
+      dom.answers.forEach((button) => {
+        button.addEventListener("click", () => answer(Number(button.dataset.index)));
+      });
+
+      window.addEventListener("keydown", (event) => {
+        if (event.repeat) return;
+        if (dom.guideDialog.open || dom.settingsDialog.open || dom.viewDialog.open) return;
+        const map = { "1": 0, "2": 1, "3": 2, "4": 3, a: 0, b: 1, c: 2, d: 3 };
+        const key = event.key.toLowerCase();
+        if (key in map) answer(map[key]);
+        if (key === " " && !state.running) start({ muted: false });
+        if (key === "p") togglePause();
+        if (key === "t") openSettings();
+        if (key === "v") openView();
+      });
+
+      window.addEventListener("resize", fitStage);
+      state.settings = loadSettings();
+      syncSettingsControls();
+      updateHud();
+      fitStage();
+      reset();
+      state.raf = requestAnimationFrame(render);
+    })();
+  </script>
+</body>
+</html>
